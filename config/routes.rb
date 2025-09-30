@@ -9,5 +9,14 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  root "render#index"
+
+  authenticated :user do
+    root "home#index"
+  end
+
+  unauthenticated :user do
+    root "home#unregistered", as: :user_unregistered
+  end  
+
+
 end
