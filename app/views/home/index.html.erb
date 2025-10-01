@@ -1,3 +1,11 @@
 <h1>Autenticación de usuarios</h1>     
 
 <%= button_to "Cerrar Sesión", destroy_user_session_path, method: :delete %>
+
+<div class="max-w-4xl mx-auto text-center">
+  <h1 class="text-3xl font-bold text-gray-800 mb-4">¡Bienvenido, <%= current_user.nombre_completo %>!</h1>
+  <p class="text-gray-600 mb-8">Gestiona tus reservas médicas</p>
+  
+  <%= link_to 'Gestionar Mis Reservas', reservas_path, 
+      class: 'bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 text-lg font-medium' %>
+</div>
