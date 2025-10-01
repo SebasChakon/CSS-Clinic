@@ -1,25 +1,69 @@
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+             html: { method: :put, multipart: true }) do |f| %>
+
   <%= render "devise/shared/error_messages", resource: resource %>
 
   <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= f.label :username, "Nombre de usuario" %><br />
+    <%= f.text_field :username, value: resource.username, autocomplete: "username" %>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <div class="field">
+    <%= f.label :firstname, "Nombre" %><br />
+    <%= f.text_field :firstname, value: resource.firstname %>
+  </div>
+
+  <div class="field">
+    <%= f.label :lastname, "Apellido" %><br />
+    <%= f.text_field :lastname, value: resource.lastname %>
+  </div>
+
+  <div class="field">
+    <%= f.label :phone, "Teléfono" %><br />
+    <%= f.telephone_field :phone, value: resource.phone %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, "Descripción / Bio" %><br />
+    <%= f.text_area :description, value: resource.description, rows: 4 %>
+  </div>
+
+  <!-- Photo despues miramos esto, chatgpt hizo eso, pero el otro sprint miramos qpex
+  <% if resource.photo.present? %>
+    <div class="field">
+      <%= f.label :current_photo, "Foto actual" %><br />
+      #Si photo es un URL o path accesible esto la mostrará 
+      <%= image_tag resource.photo, alt: "Foto de perfil", style: "max-width:150px; height:auto;" %>
+    </div>
   <% end %>
 
   <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+    <%= f.label :photo, "Subir nueva foto" %><br />
+    #Esto asume que manejas subida en el backend; si usas ActiveStorage, cambia a file_field + attachment 
+    <%= f.file_field :photo %>
+    <p class="hint">Si no usas uploads, puedes escribir aquí una URL (en cuyo caso cambia a text_field :photo)</p>
+  </div>
+  -->
+
+  <div class="field">
+    <%= f.label :email, "Correo" %><br />
+    <%= f.email_field :email, value: resource.email, autocomplete: "email" %>
+  </div>
+
+  <hr />
+
+  <div class="field">
+    <%= f.label :password, "Nueva contraseña" %>
+    <i>(dejar en blanco si no quieres cambiarla)</i><br />
     <%= f.password_field :password, autocomplete: "new-password" %>
     <% if @minimum_password_length %>
       <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
+      <em><%= @minimum_password_length %> caracteres mínimo</em>
     <% end %>
   </div>
+
 
   <div class="field">
     <%= f.label :password_confirmation %><br />
