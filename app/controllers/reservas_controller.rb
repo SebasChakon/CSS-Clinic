@@ -4,7 +4,28 @@ class ReservasController < ApplicationController
 
   # GET /reservas - Lista mis reservas
   def index
+    # Reservas del usuario
     @reservas = current_user.reservas_paciente.includes(:doctor).order(fecha_hora: :desc)
+    
+    # Filtros
+    case params[:filtro]
+    when 'proximas'
+      @reservas = @reservas.where('fecha_hora >= ?', DateTime.now).order(fecha_hora: :asc)
+    when 'pasadas'
+      @reservas = @reservas.where('fecha_hora < ?', DateTime.now).order(fecha_hora: :desc)
+    when 'pendientes'
+      @reservas = @reservas.pendiente.order(fecha_hora: :asc)
+    when 'confirmadas'
+      @reservas = @reservas.confirmada.order(fecha_hora: :asc)
+    end
+    
+    # Próxima cita (la más cercana en el futuro)
+    @proxima_cita = current_user.reservas_paciente
+                               .includes(:doctor)
+                               .where('fecha_hora >= ?', DateTime.now)
+                               .where(estado: [:pendiente, :confirmada])
+                               .order(fecha_hora: :asc)
+                               .first
   end
 
   # GET /reservas/1 - Ver detalle de reserva

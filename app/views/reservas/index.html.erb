@@ -1,8 +1,115 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold text-gray-800 mb-6">Mis Reservas Médicas</h1>
 
+  <!-- Sección de Próxima Cita -->
+  <% if @proxima_cita %>
+    <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6 mb-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-xl font-semibold text-blue-800 mb-4">📅 Tu Próxima Cita</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-3">
+              <div>
+                <label class="block text-sm font-medium text-blue-700">Médico:</label>
+                <p class="text-lg font-semibold text-gray-900"><%= @proxima_cita.doctor.nombre_completo %></p>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-blue-700">Fecha y Hora:</label>
+                <p class="text-lg font-semibold text-gray-900">
+                  <%= l(@proxima_cita.fecha_hora, format: :long) %>
+                </p>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-blue-700">Estado:</label>
+                <span class="px-3 py-1 text-sm font-semibold rounded-full <%= estado_badge_class(@proxima_cita.estado) %>">
+                  <%= @proxima_cita.estado.humanize %>
+                </span>
+              </div>
+            </div>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="block text-sm font-medium text-blue-700">Duración Estimada:</label>
+                <p class="text-gray-900">30 minutos</p>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-blue-700">Ubicación:</label>
+                <p class="text-gray-900">Consultorio Principal</p>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-blue-700">Contacto del Médico:</label>
+                <p class="text-gray-900">
+                  <% if @proxima_cita.doctor.phone.present? %>
+                    📞 <%= @proxima_cita.doctor.phone %>
+                  <% else %>
+                    <span class="text-gray-500">No disponible</span>
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-blue-700 mb-2">Motivo de la Consulta:</label>
+            <p class="text-gray-900 bg-white p-3 rounded border"><%= @proxima_cita.motivo %></p>
+          </div>
+        </div>
+        
+        <div class="flex flex-col space-y-2">
+          <%= link_to 'Ver Detalles', @proxima_cita, class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm text-center' %>
+          <% if @proxima_cita.pendiente? || @proxima_cita.confirmada? %>
+            <%= link_to 'Editar', edit_reserva_path(@proxima_cita), class: 'bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm text-center' %>
+            <%= link_to 'Cancelar', cancelar_reserva_path(@proxima_cita), 
+                method: :patch, 
+                data: { confirm: '¿Estás seguro de cancelar esta cita?' },
+                class: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm text-center' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Filtros -->
+  <div class="bg-white rounded-lg shadow-sm border p-4 mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Filtrar Reservas</h3>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to 'Todas', reservas_path, 
+          class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro].blank? ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <%= link_to 'Próximas', reservas_path(filtro: 'proximas'), 
+          class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'proximas' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <%= link_to 'Pasadas', reservas_path(filtro: 'pasadas'), 
+          class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'pasadas' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <%= link_to 'Pendientes', reservas_path(filtro: 'pendientes'), 
+          class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'pendientes' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <%= link_to 'Confirmadas', reservas_path(filtro: 'confirmadas'), 
+          class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'confirmadas' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+    </div>
+  </div>
+
+  <!-- Lista de Reservas -->
   <% if @reservas.any? %>
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b">
+        <h3 class="text-lg font-semibold text-gray-800">
+          <%= case params[:filtro]
+              when 'proximas' then 'Próximas Citas'
+              when 'pasadas' then 'Citas Pasadas' 
+              when 'pendientes' then 'Citas Pendientes'
+              when 'confirmadas' then 'Citas Confirmadas'
+              else 'Todas mis Reservas'
+              end %>
+          <span class="text-gray-500 text-sm font-normal">(<%= @reservas.count %>)</span>
+        </h3>
+      </div>
+      
       <table class="min-w-full">
         <thead class="bg-gray-50">
           <tr>
@@ -15,12 +122,18 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <% @reservas.each do |reserva| %>
-            <tr>
+            <tr class="<%= 'bg-blue-50' if reserva == @proxima_cita %>">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm font-medium text-gray-900"><%= reserva.doctor.nombre_completo %></div>
+                <div class="text-sm text-gray-500">
+                  <% if reserva.doctor.phone.present? %>
+                    📞 <%= reserva.doctor.phone %>
+                  <% end %>
+                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-gray-900"><%= l(reserva.fecha_hora, format: :long) %></div>
+                <div class="text-xs text-gray-500">Duración: 30 min</div>
               </td>
               <td class="px-6 py-4">
                 <div class="text-sm text-gray-900"><%= truncate(reserva.motivo, length: 50) %></div>
@@ -47,7 +160,18 @@
     </div>
   <% else %>
     <div class="bg-white shadow-md rounded-lg p-6 text-center">
-      <p class="text-gray-500 text-lg mb-4">No tienes reservas médicas programadas.</p>
+      <p class="text-gray-500 text-lg mb-4">
+        <% if params[:filtro].present? %>
+          No tienes reservas <%= case params[:filtro]
+                                when 'proximas' then 'próximas'
+                                when 'pasadas' then 'pasadas'
+                                when 'pendientes' then 'pendientes'
+                                when 'confirmadas' then 'confirmadas'
+                                end %>.
+        <% else %>
+          No tienes reservas médicas programadas.
+        <% end %>
+      </p>
       <%= link_to 'Volver al Inicio', root_path, class: 'bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 inline-block' %>
     </div>
   <% end %>
