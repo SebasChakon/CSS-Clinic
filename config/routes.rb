@@ -24,4 +24,9 @@ Rails.application.routes.draw do
   unauthenticated :user do
     root "home#unregistered", as: :user_unregistered
   end  
+
+  resources :reservas do
+    resources :mensajes, only: [:index, :create]
+  end
+
 end

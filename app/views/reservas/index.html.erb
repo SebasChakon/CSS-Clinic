@@ -214,6 +214,9 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <%= link_to 'Ver', reserva, class: 'text-blue-600 hover:text-blue-900 mr-3' %>
+                <% if [reserva.paciente_id, reserva.doctor_id].include?(current_user.id) %>
+                  <%= link_to "Chat", reserva_mensajes_path(reserva), class: "text-indigo-600 hover:text-indigo-900 mr-3" %>
+                <% end %>
                 
                 <% if current_user.doctor? %>
                   <!-- ACCIONES SOLO PARA DOCTORES -->
