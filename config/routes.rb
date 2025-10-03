@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   # Rutas de reservas - SOLO GESTIÓN
   resources :reservas, only: [:index, :show, :edit, :update] do
     member do
-      patch :cancelar
+      get :cancelar
+      get :confirmar
+      get :completar
     end
   end
 

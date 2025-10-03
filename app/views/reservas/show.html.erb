@@ -1,20 +1,50 @@
 <div class="container mx-auto px-4 py-8">
   <div class="bg-white shadow-md rounded-lg p-6">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">Detalle de Reserva</h1>
-      <%= link_to 'Volver a mis reservas', reservas_path, class: 'text-blue-600 hover:text-blue-800' %>
+      <h1 class="text-2xl font-bold text-gray-800">
+        <%= current_user.doctor? ? 'Detalle de Cita' : 'Detalle de Reserva' %>
+      </h1>
+      <div class="flex space-x-2">
+        <%= link_to 'Volver a la lista', reservas_path, class: 'bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400' %>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Información del Paciente/Doctor -->
+      <div>
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">
+          <%= current_user.doctor? ? 'Información del Paciente' : 'Información del Médico' %>
+        </h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Nombre:</label>
+            <p class="mt-1 text-sm text-gray-900">
+              <%= current_user.doctor? ? @reserva.paciente.nombre_completo : @reserva.doctor.nombre_completo %>
+            </p>
+          </div>
+          
+          <% if current_user.doctor? && @reserva.paciente.phone.present? %>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Teléfono:</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @reserva.paciente.phone %></p>
+          </div>
+          <% end %>
+          
+          <% if current_user.doctor? && @reserva.paciente.email.present? %>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Email:</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @reserva.paciente.email %></p>
+          </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Información de la Cita -->
       <div>
         <h2 class="text-lg font-semibold text-gray-700 mb-4">Información de la Cita</h2>
         
         <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-500">Médico:</label>
-            <p class="mt-1 text-sm text-gray-900"><%= @reserva.doctor.nombre_completo %></p>
-          </div>
-          
           <div>
             <label class="block text-sm font-medium text-gray-500">Fecha y Hora:</label>
             <p class="mt-1 text-sm text-gray-900"><%= l(@reserva.fecha_hora, format: :long) %></p>
@@ -26,36 +56,70 @@
               <%= @reserva.estado.humanize %>
             </span>
           </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 class="text-lg font-semibold text-gray-700 mb-4">Detalles de la Consulta</h2>
-        
-        <div class="space-y-4">
+          
           <div>
-            <label class="block text-sm font-medium text-gray-500">Motivo de la consulta:</label>
-            <p class="mt-1 text-sm text-gray-900"><%= @reserva.motivo %></p>
+            <label class="block text-sm font-medium text-gray-500">Duración Estimada:</label>
+            <p class="mt-1 text-sm text-gray-900">30 minutos</p>
           </div>
           
-          <% if @reserva.notas.present? %>
-            <div>
-              <label class="block text-sm font-medium text-gray-500">Notas adicionales:</label>
-              <p class="mt-1 text-sm text-gray-900"><%= @reserva.notas %></p>
-            </div>
-          <% end %>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Ubicación:</label>
+            <p class="mt-1 text-sm text-gray-900">Consultorio Principal</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <% if @reserva.pendiente? || @reserva.confirmada? %>
-      <div class="mt-8 pt-6 border-t border-gray-200 flex space-x-4">
-        <%= link_to 'Editar Reserva', edit_reserva_path(@reserva), class: 'bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700' %>
-        <%= link_to 'Cancelar Reserva', cancelar_reserva_path(@reserva), 
-            method: :patch, 
-            data: { confirm: '¿Estás seguro de cancelar esta reserva?' },
-            class: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700' %>
+    <!-- Motivo y Notas -->
+    <div class="mt-6 pt-6 border-t border-gray-200">
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-500 mb-2">Motivo de la consulta:</label>
+          <p class="text-sm text-gray-900 bg-gray-50 p-3 rounded border"><%= @reserva.motivo %></p>
+        </div>
+        
+        <% if @reserva.notas.present? %>
+        <div>
+          <label class="block text-sm font-medium text-gray-500 mb-2">Notas médicas:</label>
+          <p class="text-sm text-gray-900 bg-gray-50 p-3 rounded border"><%= @reserva.notas %></p>
+        </div>
+        <% end %>
       </div>
-    <% end %>
+    </div>
+
+    <!-- Acciones -->
+    <div class="mt-8 pt-6 border-t border-gray-200 flex space-x-4">
+      <% if current_user.doctor? %>
+        <!-- SOLO DOCTORES pueden confirmar, completar y editar notas -->
+        <% if @reserva.pendiente? %>
+          <%= link_to 'Confirmar Cita', confirmar_reserva_path(@reserva), 
+              class: 'bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700' %>
+        <% end %>
+        
+        <% if @reserva.confirmada? %>
+          <%= link_to 'Marcar como Completada', completar_reserva_path(@reserva), 
+              class: 'bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700' %>
+        <% end %>
+        
+        <!-- SOLO mostrar editar si NO está cancelada -->
+        <% unless @reserva.cancelada? %>
+          <%= link_to 'Editar Notas', edit_reserva_path(@reserva), class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700' %>
+        <% end %>
+        
+        <% if @reserva.pendiente? || @reserva.confirmada? %>
+          <%= link_to 'Cancelar', cancelar_reserva_path(@reserva), 
+              data: { confirm: '¿Estás seguro de cancelar esta cita?' },
+              class: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700' %>
+        <% end %>
+        
+      <% else %>
+        <!-- PACIENTES solo pueden cancelar (NO editar) -->
+        <% if @reserva.pendiente? || @reserva.confirmada? %>
+          <%= link_to 'Cancelar', cancelar_reserva_path(@reserva), 
+              data: { confirm: '¿Estás seguro de cancelar esta reserva?' },
+              class: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700' %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

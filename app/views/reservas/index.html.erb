@@ -1,17 +1,55 @@
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-gray-800 mb-6">Mis Reservas Médicas</h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">
+      <% if current_user.paciente? %>
+        Mis Reservas Médicas
+      <% else %>
+        Mis Citas con Pacientes
+      <% end %>
+    </h1>
+    <%= link_to 'Volver al Inicio', root_path, class: 'bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700' %>
+  </div>
+
+  <!-- Estadísticas para Médicos -->
+  <% if current_user.doctor? && @estadisticas %>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+        <div class="text-2xl font-bold text-blue-600"><%= @estadisticas[:total] %></div>
+        <div class="text-sm text-gray-600">Total Citas</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+        <div class="text-2xl font-bold text-yellow-600"><%= @estadisticas[:pendientes] %></div>
+        <div class="text-sm text-gray-600">Pendientes</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+        <div class="text-2xl font-bold text-green-600"><%= @estadisticas[:confirmadas] %></div>
+        <div class="text-sm text-gray-600">Confirmadas</div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+        <div class="text-2xl font-bold text-purple-600"><%= @estadisticas[:proximas] %></div>
+        <div class="text-sm text-gray-600">Próximas</div>
+      </div>
+    </div>
+  <% end %>
 
   <!-- Sección de Próxima Cita -->
   <% if @proxima_cita %>
     <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6 mb-8">
       <div class="flex justify-between items-start">
-        <div>
-          <h2 class="text-xl font-semibold text-blue-800 mb-4">📅 Tu Próxima Cita</h2>
+        <div class="flex-1">
+          <h2 class="text-xl font-semibold text-blue-800 mb-4">Tu Próxima Cita</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-3">
               <div>
-                <label class="block text-sm font-medium text-blue-700">Médico:</label>
-                <p class="text-lg font-semibold text-gray-900"><%= @proxima_cita.doctor.nombre_completo %></p>
+                <label class="block text-sm font-medium text-blue-700">
+                  <%= current_user.doctor? ? 'Paciente:' : 'Médico:' %>
+                </label>
+                <p class="text-lg font-semibold text-gray-900">
+                  <%= current_user.doctor? ? @proxima_cita.paciente.nombre_completo : @proxima_cita.doctor.nombre_completo %>
+                </p>
+                <% if current_user.doctor? && @proxima_cita.paciente.phone.present? %>
+                  <p class="text-sm text-gray-600"><%= @proxima_cita.paciente.phone %></p>
+                <% end %>
               </div>
               
               <div>
@@ -41,32 +79,38 @@
               </div>
               
               <div>
-                <label class="block text-sm font-medium text-blue-700">Contacto del Médico:</label>
-                <p class="text-gray-900">
-                  <% if @proxima_cita.doctor.phone.present? %>
-                    📞 <%= @proxima_cita.doctor.phone %>
-                  <% else %>
-                    <span class="text-gray-500">No disponible</span>
-                  <% end %>
-                </p>
+                <label class="block text-sm font-medium text-blue-700">Motivo:</label>
+                <p class="text-gray-900"><%= truncate(@proxima_cita.motivo, length: 100) %></p>
               </div>
             </div>
           </div>
-          
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-blue-700 mb-2">Motivo de la Consulta:</label>
-            <p class="text-gray-900 bg-white p-3 rounded border"><%= @proxima_cita.motivo %></p>
-          </div>
         </div>
         
-        <div class="flex flex-col space-y-2">
+        <div class="flex flex-col space-y-2 ml-4">
           <%= link_to 'Ver Detalles', @proxima_cita, class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm text-center' %>
-          <% if @proxima_cita.pendiente? || @proxima_cita.confirmada? %>
-            <%= link_to 'Editar', edit_reserva_path(@proxima_cita), class: 'bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm text-center' %>
+          <% if current_user.doctor? %>
+            <!-- BOTONES SOLO PARA DOCTORES -->
+            <% if @proxima_cita.pendiente? %>
+              <%= link_to 'Confirmar', confirmar_reserva_path(@proxima_cita), 
+                  class: 'bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm text-center' %>
+            <% end %>
+            <% if @proxima_cita.confirmada? %>
+              <%= link_to 'Completar', completar_reserva_path(@proxima_cita), 
+                  class: 'bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm text-center' %>
+            <% end %>
+            <% unless @proxima_cita.cancelada? %>
+              <%= link_to 'Editar Notas', edit_reserva_path(@proxima_cita), class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm text-center' %>
+            <% end %>
             <%= link_to 'Cancelar', cancelar_reserva_path(@proxima_cita), 
-                method: :patch, 
                 data: { confirm: '¿Estás seguro de cancelar esta cita?' },
                 class: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm text-center' %>
+          <% else %>
+            <!-- BOTONES SOLO PARA PACIENTES - SIN EDITAR -->
+            <% if @proxima_cita.pendiente? || @proxima_cita.confirmada? %>
+              <%= link_to 'Cancelar', cancelar_reserva_path(@proxima_cita), 
+                  data: { confirm: '¿Estás seguro de cancelar esta cita?' },
+                  class: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm text-center' %>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -75,7 +119,7 @@
 
   <!-- Filtros -->
   <div class="bg-white rounded-lg shadow-sm border p-4 mb-6">
-    <h3 class="text-lg font-semibold text-gray-800 mb-3">Filtrar Reservas</h3>
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Filtrar <%= current_user.doctor? ? 'Citas' : 'Reservas' %></h3>
     <div class="flex flex-wrap gap-2">
       <%= link_to 'Todas', reservas_path, 
           class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro].blank? ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
@@ -91,10 +135,18 @@
       
       <%= link_to 'Confirmadas', reservas_path(filtro: 'confirmadas'), 
           class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'confirmadas' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <% if current_user.doctor? %>
+        <%= link_to 'Canceladas', reservas_path(filtro: 'canceladas'), 
+            class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'canceladas' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+        
+        <%= link_to 'Completadas', reservas_path(filtro: 'completadas'), 
+            class: "px-4 py-2 rounded-full text-sm font-medium #{params[:filtro] == 'completadas' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      <% end %>
     </div>
   </div>
 
-  <!-- Lista de Reservas -->
+  <!-- Lista de Reservas/Citas -->
   <% if @reservas.any? %>
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
       <div class="px-6 py-4 bg-gray-50 border-b">
@@ -104,7 +156,9 @@
               when 'pasadas' then 'Citas Pasadas' 
               when 'pendientes' then 'Citas Pendientes'
               when 'confirmadas' then 'Citas Confirmadas'
-              else 'Todas mis Reservas'
+              when 'canceladas' then 'Citas Canceladas'
+              when 'completadas' then 'Citas Completadas'
+              else current_user.doctor? ? 'Todas mis Citas' : 'Todas mis Reservas'
               end %>
           <span class="text-gray-500 text-sm font-normal">(<%= @reservas.count %>)</span>
         </h3>
@@ -113,7 +167,9 @@
       <table class="min-w-full">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Médico</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <%= current_user.doctor? ? 'Paciente' : 'Médico' %>
+            </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha y Hora</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Motivo</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
@@ -124,10 +180,14 @@
           <% @reservas.each do |reserva| %>
             <tr class="<%= 'bg-blue-50' if reserva == @proxima_cita %>">
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= reserva.doctor.nombre_completo %></div>
+                <div class="text-sm font-medium text-gray-900">
+                  <%= current_user.doctor? ? reserva.paciente.nombre_completo : reserva.doctor.nombre_completo %>
+                </div>
                 <div class="text-sm text-gray-500">
-                  <% if reserva.doctor.phone.present? %>
-                    📞 <%= reserva.doctor.phone %>
+                  <% if current_user.doctor? && reserva.paciente.phone.present? %>
+                    <%= reserva.paciente.phone %>
+                  <% elsif reserva.doctor.phone.present? %>
+                    <%= reserva.doctor.phone %>
                   <% end %>
                 </div>
               </td>
@@ -145,12 +205,36 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <%= link_to 'Ver', reserva, class: 'text-blue-600 hover:text-blue-900 mr-3' %>
-                <% if reserva.pendiente? || reserva.confirmada? %>
-                  <%= link_to 'Editar', edit_reserva_path(reserva), class: 'text-green-600 hover:text-green-900 mr-3' %>
-                  <%= link_to 'Cancelar', cancelar_reserva_path(reserva), 
-                      method: :patch, 
-                      data: { confirm: '¿Estás seguro de cancelar esta reserva?' },
-                      class: 'text-red-600 hover:text-red-900' %>
+                
+                <% if current_user.doctor? %>
+                  <!-- ACCIONES SOLO PARA DOCTORES -->
+                  <% if reserva.pendiente? %>
+                    <%= link_to 'Confirmar', confirmar_reserva_path(reserva), 
+                        class: 'text-green-600 hover:text-green-900 mr-3' %>
+                  <% end %>
+                  
+                  <% if reserva.confirmada? %>
+                    <%= link_to 'Completar', completar_reserva_path(reserva), 
+                        class: 'text-purple-600 hover:text-purple-900 mr-3' %>
+                  <% end %>
+                  
+                  <% unless reserva.cancelada? %>
+                    <%= link_to 'Editar', edit_reserva_path(reserva), class: 'text-blue-600 hover:text-blue-900 mr-3' %>
+                  <% end %>
+                  
+                  <% if reserva.pendiente? || reserva.confirmada? %>
+                    <%= link_to 'Cancelar', cancelar_reserva_path(reserva), 
+                        data: { confirm: '¿Estás seguro de cancelar esta cita?' },
+                        class: 'text-red-600 hover:text-red-900' %>
+                  <% end %>
+                  
+                <% else %>
+                  <!-- ACCIONES SOLO PARA PACIENTES - SIN EDITAR -->
+                  <% if reserva.pendiente? || reserva.confirmada? %>
+                    <%= link_to 'Cancelar', cancelar_reserva_path(reserva), 
+                        data: { confirm: '¿Estás seguro de cancelar esta reserva?' },
+                        class: 'text-red-600 hover:text-red-900' %>
+                  <% end %>
                 <% end %>
               </td>
             </tr>
@@ -158,21 +242,32 @@
         </tbody>
       </table>
     </div>
+
+    <!-- BOTÓN VOLVER ABAJO DE LA TABLA -->
+    <div class="flex justify-center mt-6">
+      <%= link_to 'Volver al Inicio', root_path, class: 'bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700' %>
+    </div>
+    
   <% else %>
     <div class="bg-white shadow-md rounded-lg p-6 text-center">
       <p class="text-gray-500 text-lg mb-4">
         <% if params[:filtro].present? %>
-          No tienes reservas <%= case params[:filtro]
+          No tienes <%= current_user.doctor? ? 'citas' : 'reservas' %> <%= case params[:filtro]
                                 when 'proximas' then 'próximas'
                                 when 'pasadas' then 'pasadas'
                                 when 'pendientes' then 'pendientes'
                                 when 'confirmadas' then 'confirmadas'
+                                when 'canceladas' then 'canceladas'
+                                when 'completadas' then 'completadas'
                                 end %>.
         <% else %>
-          No tienes reservas médicas programadas.
+          No tienes <%= current_user.doctor? ? 'citas programadas' : 'reservas médicas programadas' %>.
         <% end %>
       </p>
-      <%= link_to 'Volver al Inicio', root_path, class: 'bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 inline-block' %>
+      <div class="flex justify-center space-x-4">
+        <%= link_to 'Volver al Inicio', root_path, class: 'bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 inline-block' %>
+        <%= link_to 'Recargar', reservas_path, class: 'bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700 inline-block' %>
+      </div>
     </div>
   <% end %>
 </div>
