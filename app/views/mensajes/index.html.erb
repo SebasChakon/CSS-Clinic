@@ -1,1 +1,30 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">
+      Chat de la Cita con 
+      <%= current_user.doctor? ? @reserva.paciente.nombre_completo : @reserva.doctor.nombre_completo %>
+    </h1>
 
+    <div class="border rounded-lg p-4 mb-4 h-80 overflow-y-auto bg-gray-50">
+      <% @mensajes.each do |msg| %>
+        <div class="mb-3">
+          <strong class="<%= msg.user == current_user ? 'text-blue-600' : 'text-gray-700' %>">
+            <%= msg.user.nombre_completo %>:
+          </strong>
+          <p class="inline"><%= msg.contenido %></p>
+          <span class="text-xs text-gray-400">(<%= l(msg.created_at, format: :short) %>)</span>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Formulario para enviar mensaje -->
+    <%= form_with(model: [@reserva, @mensaje], local: true, class: "flex space-x-2") do |form| %>
+      <%= form.text_area :contenido, rows: 2, class: "flex-grow rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Escribe un mensaje..." %>
+      <%= form.submit "Enviar", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+    <% end %>
+
+    <div class="mt-4">
+      <%= link_to "Volver a la Reserva", reserva_path(@reserva), class: "text-gray-600 hover:text-gray-900" %>
+    </div>
+  </div>
+</div>
