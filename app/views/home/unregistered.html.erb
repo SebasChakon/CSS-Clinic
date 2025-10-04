@@ -1,4 +1,13 @@
-<h1>Usuario no autenticado</h1>
-<%= link_to "Iniciar Sesion", new_user_session_path %>
-<%= link_to "Crear una cuenta", new_user_registration_path %>
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full text-center">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Bienvenido a CSS clinic!</h1>
+    <p class="text-gray-600 mb-6">
+      Debes iniciar sesión o registrarte para acceder al funcionalidad.
+    </p>
 
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <%= link_to 'Iniciar Sesión', new_user_session_path, class: 'bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition-colors duration-200' %>
+      <%= link_to 'Registrarse', new_user_registration_path, class: 'bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition-colors duration-200' %>
+    </div>
+  </div>
+</div>
