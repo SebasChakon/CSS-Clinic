@@ -1,4 +1,3 @@
-# db/seeds.rb
 puts "🌱 Iniciando reservas de pruebas..."
 
 # Crear médico de prueba
@@ -91,4 +90,4 @@ Reserva.create!(
   notas: "Paciente reporta dificultad para respirar"
 )
 
-puts "✅ ¡Reservas creadas exitosamente!"
+puts "¡Reservas creadas exitosamente!"
