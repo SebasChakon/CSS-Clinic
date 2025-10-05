@@ -11,10 +11,6 @@ Rails.application.routes.draw do
       get :confirmar
       get :completar
     end
-    
-    collection do
-      get :crear_reservas_prueba
-    end
   end
 
   authenticated :user do

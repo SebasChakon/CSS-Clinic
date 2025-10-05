@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_03_195611) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_03_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,17 +22,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_03_195611) do
     t.datetime "updated_at", null: false
     t.index ["reserva_id"], name: "index_mensajes_on_reserva_id"
     t.index ["user_id"], name: "index_mensajes_on_user_id"
-  end
-
-  create_table "messages", force: :cascade do |t|
-    t.bigint "reserva_id", null: false
-    t.bigint "sender_id", null: false
-    t.text "content", null: false
-    t.boolean "read", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["reserva_id"], name: "index_messages_on_reserva_id"
-    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "reservas", force: :cascade do |t|
@@ -69,8 +58,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_03_195611) do
 
   add_foreign_key "mensajes", "reservas"
   add_foreign_key "mensajes", "users"
-  add_foreign_key "messages", "reservas"
-  add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "reservas", "users", column: "doctor_id"
   add_foreign_key "reservas", "users", column: "paciente_id"
 end
