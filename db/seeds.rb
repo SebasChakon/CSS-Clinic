@@ -1,9 +1,10 @@
+# db/seeds.rb
 puts "🌱 Iniciando reservas de pruebas..."
 
 # Crear médico de prueba
 doctor = User.find_or_create_by!(
   email: "doctor@clinica.com",
-  firstname: "Dr. Roberto",
+  firstname: "Dr. Roberto", 
   lastname: "Méndez",
   phone: "+56912345678",
   rol: "doctor"
@@ -15,9 +16,9 @@ end
 
 # Crear paciente de prueba  
 paciente = User.find_or_create_by!(
-  email: "paciente@clinica.com", 
+  email: "paciente@clinica.com",
   firstname: "Martina",
-  lastname: "García",
+  lastname: "García", 
   phone: "+56987654321",
   rol: "paciente"
 ) do |user|
@@ -30,54 +31,64 @@ end
 Reserva.destroy_all
 puts "Reservas anteriores eliminadas"
 
-# 1. Reserva PENDIENTE (mañana)
+# 1. Reserva pendiente (mañana)
 Reserva.create!(
-paciente: paciente,
-doctor: doctor,
-fecha_hora: DateTime.now + 1.day,
-motivo: "Consulta general de rutina",
-estado: "pendiente",
-notas: "Paciente viene por chequeo anual"
+  paciente: paciente,
+  doctor: doctor,
+  fecha_hora: DateTime.now + 1.day,
+  motivo: "Consulta general de rutina", 
+  estado: "pendiente",
+  duracion: 30,
+  ubicacion: "Consultorio Principal",
+  notas: "Paciente viene por chequeo anual"
 )
 
-# Reserva confirmada (pasado mañana)
+# 2. Reserva confirmada (pasado mañana)
 Reserva.create!(
-paciente: paciente,
-doctor: doctor,
-fecha_hora: DateTime.now + 2.days,
-motivo: "Seguimiento de tratamiento",
-estado: "confirmada", 
-notas: "Control de medicación mensual"
+  paciente: paciente,
+  doctor: doctor, 
+  fecha_hora: DateTime.now + 2.days,
+  motivo: "Seguimiento de tratamiento",
+  estado: "confirmada",
+  duracion: 45,
+  ubicacion: "Consultorio Piso 2",
+  notas: "Control de medicación mensual"
 )
 
-# Reserva completada (ayer)
+# 3. Reserva completada (ayer)
 Reserva.create!(
-paciente: paciente,
-doctor: doctor,
-fecha_hora: DateTime.now - 1.day,
-motivo: "Dolor de espalda",
-estado: "completada",
-notas: "Se recetó antiinflamatorios y reposo. Seguimiento en 2 semanas."
+  paciente: paciente,
+  doctor: doctor,
+  fecha_hora: DateTime.now - 1.day, 
+  motivo: "Dolor de espalda",
+  estado: "completada",
+  duracion: 60,  
+  ubicacion: "Consultorio Principal",
+  notas: "Se recetó antiinflamatorios y reposo. Seguimiento en 2 semanas."
 )
 
-# Reserva cancelada (la semana pasada)
+# 4. Reserva cancelada (la semana pasada)
 Reserva.create!(
-paciente: paciente,
-doctor: doctor,
-fecha_hora: DateTime.now - 3.days,
-motivo: "tos",
-estado: "cancelada",
-notas: "Paciente reportó mejoría y no asistió"
+  paciente: paciente,
+  doctor: doctor,
+  fecha_hora: DateTime.now - 3.days,
+  motivo: "Tos persistente",
+  estado: "cancelada",
+  duracion: 30,
+  ubicacion: "Consultorio Piso 2",
+  notas: "Paciente reportó mejoría y no asistió"
 )
 
-# Reserva muy próxima (en 2 horas)
+# 5. Reserva muy próxima (en 2 horas)
 Reserva.create!(
-paciente: paciente,
-doctor: doctor,
-fecha_hora: DateTime.now + 2.hours,
-motivo: "Urgencia", 
-estado: "confirmada",
-notas: "Paciente reporta dificultad para respirar"
+  paciente: paciente,
+  doctor: doctor,
+  fecha_hora: DateTime.now + 2.hours,
+  motivo: "Urgencia respiratoria",
+  estado: "confirmada", 
+  duracion: 90,
+  ubicacion: "Urgencias",
+  notas: "Paciente reporta dificultad para respirar"
 )
 
-puts "¡Seeds completados exitosamente!"
+puts "✅ ¡Reservas creadas exitosamente!"

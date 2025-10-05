@@ -65,12 +65,16 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-600 mb-1">DURACIÓN:</label>
-                  <p class="font-semibold text-gray-900">30 minutos</p>
+                  <p class="font-semibold text-gray-900">
+                    <%= @proxima_cita.duracion %> minutos
+                  </p>
                 </div>
                 
                 <div>
                   <label class="block text-sm font-medium text-gray-600 mb-1">UBICACIÓN:</label>
-                  <p class="font-semibold text-gray-900">Consultorio Principal</p>
+                  <p class="font-semibold text-gray-900">
+                    <%= @proxima_cita.ubicacion %>
+                  </p>
                 </div>
               </div>
               
@@ -159,7 +163,7 @@
                   <p class="text-lg font-bold text-gray-900">
                     <%= l(reserva.fecha_hora, format: :long) %>
                   </p>
-                  <p class="text-sm text-gray-600 mt-1">[Duración: 30 min]</p>
+                  <p class="text-sm text-gray-600 mt-1">[Duración: <%= reserva.duracion %> min]</p>
                 </div>
 
                 <!-- Columna 3: Motivo y Estado -->

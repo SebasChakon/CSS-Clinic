@@ -30,6 +30,8 @@
         <p><strong>Paciente:</strong> <%= @reserva.paciente.nombre_completo %></p>
         <p><strong>Fecha:</strong> <%= l(@reserva.fecha_hora, format: :long) %></p>
         <p><strong>Motivo:</strong> <%= @reserva.motivo %></p>
+        <p><strong>Duración:</strong> <%= @reserva.duracion %> minutos</p>
+        <p><strong>Ubicación:</strong> <%= @reserva.ubicacion %></p>
         <p><strong>Estado:</strong> 
           <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= estado_badge_class(@reserva.estado) %>">
             <%= @reserva.estado.humanize %>
