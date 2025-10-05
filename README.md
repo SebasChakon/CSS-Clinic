@@ -1,24 +1,9 @@
-# README
+Link web/render: https://rendeerr.onrender.com/
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Datos para ingresar y hacer test:
 
-Things you may want to cover:
+Medico: "email: doctor@clinica.com
+        contraseña: 123456"
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Paciente: "email: paciente@clinica.com
+        contraseña: 123456"
