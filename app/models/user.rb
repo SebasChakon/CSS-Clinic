@@ -7,9 +7,11 @@ class User < ApplicationRecord
   # Relaciones con reservas
   has_many :reservas_paciente, class_name: 'Reserva', foreign_key: 'paciente_id'
   has_many :reservas_doctor, class_name: 'Reserva', foreign_key: 'doctor_id'
+  has_many :resenas, foreign_key: 'autor_id', dependent: :nullify
 
   # Rol del usuario
-  enum rol: { paciente: 0, doctor: 1 }
+  enum rol: { paciente: 0, doctor: 1, admin: 2 }
+
 
   # Métodos para verificar el rol
   def paciente?
@@ -18,6 +20,10 @@ class User < ApplicationRecord
 
   def doctor?
     rol == 'doctor'
+  end
+
+  def admin?
+    rol == 'admin'
   end
 
   def nombre_completo

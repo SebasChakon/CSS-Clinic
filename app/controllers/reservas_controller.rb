@@ -1,10 +1,30 @@
 class ReservasController < ApplicationController
   before_action :authenticate_user!
   before_action :set_reserva, only: [:show, :edit, :update, :cancelar, :confirmar, :completar]
+  before_action :ensure_verified_doctor!, only: [:edit, :update, :confirmar, :completar]
+
 
   def index
-    if current_user.paciente?
-      @reservas = current_user.reservas_paciente.includes(:doctor).order(fecha_hora: :desc)
+    if current_user.admin?
+      @reservas = Reserva.includes(:paciente, :doctor, resenas: :autor).order(fecha_hora: :desc)
+
+      case params[:filtro]
+      when 'proximas'
+        @reservas = @reservas.where('fecha_hora >= ?', DateTime.now).order(fecha_hora: :asc)
+      when 'pasadas'
+        @reservas = @reservas.where('fecha_hora < ?', DateTime.now).order(fecha_hora: :desc)
+      when 'pendientes'
+        @reservas = @reservas.pendiente.order(fecha_hora: :asc)
+      when 'confirmadas'
+        @reservas = @reservas.confirmada.order(fecha_hora: :asc)
+      when 'canceladas'
+        @reservas = @reservas.cancelada.order(fecha_hora: :desc)
+      when 'completadas'
+        @reservas = @reservas.completada.order(fecha_hora: :desc)
+      end
+      
+    elsif current_user.paciente?
+      @reservas = current_user.reservas_paciente.includes(:doctor, resenas: :autor).order(fecha_hora: :desc)
       
       case params[:filtro]
       when 'proximas'
@@ -25,7 +45,7 @@ class ReservasController < ApplicationController
                                  .first
 
     elsif current_user.doctor?
-      @reservas = current_user.reservas_doctor.includes(:paciente).order(fecha_hora: :desc)
+      @reservas = current_user.reservas_doctor.includes(:paciente, resenas: :autor).order(fecha_hora: :desc)
       
       case params[:filtro]
       when 'proximas'
@@ -59,6 +79,7 @@ class ReservasController < ApplicationController
   end
 
   def show
+    @resenas = @reserva.resenas.includes(:autor).order(created_at: :desc)
   end
 
   def edit

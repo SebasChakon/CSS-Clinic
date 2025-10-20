@@ -1,0 +1,56 @@
+<h1 class="text-2xl font-bold mb-6">Panel Admin</h1>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+  <!-- Sección Usuarios -->
+  <div class="bg-white p-6 rounded shadow">
+    <h2 class="text-xl font-semibold mb-4">Usuarios Registrados</h2>
+    <table class="min-w-full text-left">
+        <thead>
+            <tr class="border-b">
+            <th class="px-4 py-2">Nombre</th>
+            <th class="px-4 py-2">Email</th>
+            <th class="px-4 py-2">Rol</th>
+            <th class="px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @usuarios.each do |u| %>
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2"><%= u.nombre_completo %></td>
+                <td class="px-4 py-2"><%= u.email %></td>
+                <td class="px-4 py-2"><%= u.rol.humanize %></td>
+                <td class="px-4 py-2 space-x-2">
+                <% unless u.doctor? %>
+                    <%= button_to 'Hacer Médico', admin_hacer_medico_path(u), method: :post,
+                        class: 'bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm' %>
+                <% else %>
+                    <span class="text-gray-500 text-sm">Ya es doctor</span>
+                <% end %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+
+  </div>
+
+  <!-- Sección Reservas -->
+  <div class="bg-white p-6 rounded shadow">
+    <h2 class="text-xl font-semibold mb-4">Reservas Recientes</h2>
+    <ul class="space-y-3">
+      <% @reservas.each do |r| %>
+        <li class="border-b pb-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <strong><%= r.paciente.nombre_completo %></strong> → <%= r.doctor.nombre_completo %>
+              <span class="text-gray-500 text-sm ml-2">(<%= l(r.fecha_hora, format: :short) %>)</span>
+            </div>
+
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+</div>

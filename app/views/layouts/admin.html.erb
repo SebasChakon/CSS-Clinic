@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+    <%= favicon_link_tag "Logo.png" %>
+
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-100">
+    <div class="p-4 border-b bg-white">
+      <div class="container mx-auto flex justify-between items-center">
+        <div>
+          <%= link_to "Panel Admin", admin_root_path, class: "font-bold text-lg" %>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <%= link_to "Volver al sitio", root_path, class: "text-sm text-gray-700 hover:text-gray-900" %>
+          <% if user_signed_in? %>
+            <span class="text-sm text-gray-600">Hola, <%= current_user.firstname.presence || current_user.email %></span>
+            <%= button_to 'Salir', destroy_user_session_path, method: :delete, form: { class: 'inline' }, class: 'ml-2 text-red-600 bg-transparent border-0 p-0' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <main class="container mx-auto py-6 px-4">
+      <%= yield %>
+    </main>
+  </body>
+</html>
+

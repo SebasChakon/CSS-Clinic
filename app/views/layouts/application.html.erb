@@ -6,19 +6,51 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-
-
-
     <%= favicon_link_tag "Logo.png" %>
-
-
-
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-    <%= yield %>
+  <body class="bg-gray-50">
+    <header class="bg-white border-b">
+      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div>
+          <%= link_to "Servicios Médicos", root_path, class: "font-bold text-lg" %>
+        </div>
+
+        <nav class="flex items-center space-x-4 text-sm">
+          <% if user_signed_in? %>
+            <span class="text-gray-700">Hola, <%= current_user.firstname.presence || current_user.email %></span>
+
+            <%= link_to 'Reservas', reservas_path, class: 'text-gray-700 hover:text-gray-900' %>
+            <%= link_to 'Mi Perfil', edit_user_registration_path, class: 'text-gray-700 hover:text-gray-900' %>
+
+            <% if current_user.admin? %>
+              <%= link_to 'Panel Admin', admin_panel_path, class: 'ml-4 px-3 py-1 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700' %>
+            <% end %>
+
+            <%= button_to 'Salir', destroy_user_session_path, method: :delete,
+                  form: { class: 'inline' },
+                  class: 'ml-3 text-red-600 bg-transparent border-0 p-0' %>
+          <% else %>
+            <%= link_to 'Iniciar sesión', new_user_session_path, class: 'text-gray-700 hover:text-gray-900' %>
+            <%= link_to 'Registrarse', new_user_registration_path, class: 'ml-3 text-gray-700 hover:text-gray-900' %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container mx-auto px-4 mt-4">
+      <% if notice %>
+        <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded mb-3"><%= notice %></div>
+      <% end %>
+      <% if alert %>
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded mb-3"><%= alert %></div>
+      <% end %>
+    </div>
+
+    <main class="container mx-auto px-4 py-6">
+      <%= yield %>
+    </main>
   </body>
 </html>
+

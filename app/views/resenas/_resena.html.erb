@@ -1,0 +1,25 @@
+<div class="bg-white rounded p-4 border mb-3">
+  <div class="flex justify-between items-center">
+    <div>
+      <div class="text-sm font-semibold">Reseña del paciente</div>
+      <div class="text-xs text-gray-500"><%= l(resena.created_at, format: :short) %></div>
+    </div>
+    <div class="text-yellow-500 font-bold text-lg"><%= '★' * resena.rating %></div>
+  </div>
+
+  <% if resena.comment.present? %>
+    <p class="mt-2 text-gray-700"><%= simple_format(h(resena.comment)) %></p>
+  <% end %>
+
+  <% if resena.autor == current_user %>
+    <div class="mt-2 text-sm">
+      <%= link_to 'Editar', edit_reserva_resena_path(resena.reserva, resena), class: 'text-blue-600 mr-2' %>
+      <%= button_to 'Eliminar', reserva_resena_path(resena.reserva, resena),
+            method: :delete,
+            data: { confirm: '¿Eliminar reseña?' },
+            form: { class: 'inline-block' },
+            class: 'text-red-600 bg-transparent p-0 underline' %>
+
+    </div>
+  <% end %>
+</div>

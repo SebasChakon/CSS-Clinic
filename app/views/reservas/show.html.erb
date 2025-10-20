@@ -87,6 +87,35 @@
       </div>
     </div>
 
+    <!-- Bloque de reseñas -->
+    <div class="mt-6 pt-6 border-t border-gray-200">
+      <h3 class="text-lg font-semibold mb-3">Reseñas</h3>
+
+      <div class="mb-4">
+        <strong>Promedio:</strong>
+        <span class="ml-2 text-xl"><%= @reserva.average_rating %> / 5</span>
+        <span class="text-sm text-gray-500">(<%= @reserva.resenas.count %> reseñas)</span>
+      </div>
+
+      <% if @reserva.resenas.any? %>
+        <div class="space-y-3">
+          <%= render partial: 'resenas/resena', collection: @reserva.resenas.order(created_at: :desc), as: :resena %>
+        </div>
+      <% else %>
+        <p class="text-gray-500">Aún no hay reseñas para esta cita.</p>
+      <% end %>
+
+      <%# Botón para crear reseña: solo paciente y sólo si la cita ya pasó o está completada y no tiene reseña %>
+      <% if @reserva.paciente_id == current_user.id && @reserva.fecha_hora.present? && (@reserva.fecha_hora < Time.current || @reserva.completada?) && !@reserva.resenas.exists?(autor: current_user) %>
+        <div class="mt-4">
+          <%= link_to 'Dejar Reseña', new_reserva_resena_path(@reserva), class: 'bg-green-600 text-white px-4 py-2 rounded' %>
+        </div>
+      <% end %>
+    </div>
+
+
+
+
     <!-- Acciones -->
     <div class="mt-8 pt-6 border-t border-gray-200 flex space-x-4">
       <% if current_user.doctor? %>

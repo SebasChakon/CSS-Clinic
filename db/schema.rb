@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_05_023743) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_19_181351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,6 +24,29 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_05_023743) do
     t.index ["user_id"], name: "index_mensajes_on_user_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "reserva_id", null: false
+    t.bigint "sender_id", null: false
+    t.text "content", null: false
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reserva_id"], name: "index_messages_on_reserva_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "resenas", force: :cascade do |t|
+    t.bigint "reserva_id", null: false
+    t.bigint "autor_id", null: false
+    t.integer "rating", null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["autor_id"], name: "index_resenas_on_autor_id"
+    t.index ["reserva_id", "autor_id"], name: "index_resenas_on_reserva_id_and_autor_id", unique: true
+    t.index ["reserva_id"], name: "index_resenas_on_reserva_id"
+  end
+
   create_table "reservas", force: :cascade do |t|
     t.bigint "paciente_id", null: false
     t.bigint "doctor_id", null: false
@@ -33,8 +56,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_05_023743) do
     t.integer "estado", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "duracion", null: false
-    t.string "ubicacion", null: false
+    t.integer "duracion", default: 30, null: false
+    t.string "ubicacion", default: "Consultorio Principal", null: false
     t.index ["doctor_id"], name: "index_reservas_on_doctor_id"
     t.index ["paciente_id"], name: "index_reservas_on_paciente_id"
   end
@@ -54,12 +77,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_05_023743) do
     t.string "description"
     t.string "photo"
     t.integer "rol", default: 0
+    t.boolean "doctor_verified", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "mensajes", "reservas"
   add_foreign_key "mensajes", "users"
+  add_foreign_key "messages", "reservas"
+  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "resenas", "reservas"
+  add_foreign_key "resenas", "users", column: "autor_id"
   add_foreign_key "reservas", "users", column: "doctor_id"
   add_foreign_key "reservas", "users", column: "paciente_id"
 end

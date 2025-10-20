@@ -11,7 +11,11 @@ Rails.application.routes.draw do
       get :confirmar
       get :completar
     end
+
+    resources :mensajes, only: [:index, :create]
+    resources :resenas, only: [:new, :create, :edit, :update, :destroy]
   end
+
 
   authenticated :user do
     root "home#index"
@@ -21,8 +25,12 @@ Rails.application.routes.draw do
     root "home#unregistered", as: :user_unregistered
   end  
 
-  resources :reservas do
-    resources :mensajes, only: [:index, :create]
-  end
+  namespace :admin do
+    root 'dashboard#index'
+    get 'panel', to: 'panel#index'        
+    post 'panel/hacer_medico/:id', to: 'panel#hacer_medico', as: 'hacer_medico'
+    resources :doctores
+    resources :reservas
+  end 
 
 end
