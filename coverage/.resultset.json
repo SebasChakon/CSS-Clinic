@@ -1,14 +1,340 @@
 {
   "Minitest": {
     "coverage": {
-      "/home/sebas/2025-2-grupo-60/app/controllers/render_controller.rb": {
+      "/home/sebas/2025-2-grupo-60/app/models/reserva.rb": {
         "lines": [
           1,
           1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          3,
+          null,
+          null,
           null,
           null
         ],
-        "branches": {}
+        "branches": {
+          "[:\"&.\", 0, 11, 4, 11, 38]": {
+            "[:then, 1, 11, 4, 11, 38]": 0,
+            "[:else, 2, 11, 4, 11, 38]": 3
+          }
+        }
+      },
+      "/home/sebas/2025-2-grupo-60/app/models/resena.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          46,
+          46,
+          0,
+          null,
+          null,
+          null,
+          1,
+          46,
+          46,
+          46,
+          null,
+          null
+        ],
+        "branches": {
+          "[:unless, 0, 16, 4, 16, 34]": {
+            "[:else, 1, 16, 4, 16, 34]": 46,
+            "[:then, 2, 16, 4, 16, 10]": 0
+          },
+          "[:unless, 3, 17, 4, 19, 7]": {
+            "[:else, 4, 17, 4, 19, 7]": 46,
+            "[:then, 5, 18, 6, 18, 79]": 0
+          },
+          "[:unless, 6, 23, 4, 23, 47]": {
+            "[:else, 7, 23, 4, 23, 47]": 46,
+            "[:then, 8, 23, 4, 23, 10]": 0
+          },
+          "[:unless, 9, 25, 4, 25, 70]": {
+            "[:else, 10, 25, 4, 25, 70]": 45,
+            "[:then, 11, 25, 4, 25, 55]": 1
+          }
+        }
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/reservas_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          16,
+          5,
+          null,
+          5,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          null,
+          11,
+          5,
+          null,
+          5,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          null,
+          5,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          6,
+          6,
+          null,
+          6,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          null,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          3,
+          null,
+          null,
+          1,
+          null,
+          3,
+          1,
+          null,
+          null,
+          3,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          3,
+          2,
+          1,
+          1,
+          1,
+          null,
+          0,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          2,
+          1,
+          1,
+          null,
+          0,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          2,
+          1,
+          1,
+          null,
+          0,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          2,
+          2,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          15,
+          1,
+          14,
+          6,
+          8,
+          8,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          0,
+          null,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 7, 4, 75, 7]": {
+            "[:then, 1, 8, 6, 19, 9]": 5,
+            "[:else, 2, 21, 4, 74, 7]": 11
+          },
+          "[:case, 3, 10, 6, 19, 9]": {
+            "[:when, 4, 12, 8, 12, 63]": 1,
+            "[:when, 5, 14, 8, 14, 64]": 1,
+            "[:when, 6, 16, 8, 16, 64]": 1,
+            "[:when, 7, 18, 8, 18, 65]": 1,
+            "[:else, 8, 10, 6, 19, 9]": 1
+          },
+          "[:if, 9, 21, 4, 74, 7]": {
+            "[:then, 10, 22, 6, 40, 39]": 5,
+            "[:else, 11, 42, 4, 74, 7]": 6
+          },
+          "[:case, 12, 24, 6, 33, 9]": {
+            "[:when, 13, 26, 8, 26, 63]": 1,
+            "[:when, 14, 28, 8, 28, 64]": 1,
+            "[:when, 15, 30, 8, 30, 64]": 1,
+            "[:when, 16, 32, 8, 32, 65]": 1,
+            "[:else, 17, 24, 6, 33, 9]": 1
+          },
+          "[:if, 18, 42, 4, 74, 7]": {
+            "[:then, 19, 43, 6, 74, 7]": 6,
+            "[:else, 20, 42, 4, 74, 7]": 0
+          },
+          "[:case, 21, 45, 6, 58, 9]": {
+            "[:when, 22, 47, 8, 47, 92]": 1,
+            "[:when, 23, 49, 8, 49, 92]": 1,
+            "[:when, 24, 51, 8, 51, 63]": 1,
+            "[:when, 25, 53, 8, 53, 64]": 1,
+            "[:when, 26, 55, 8, 55, 64]": 1,
+            "[:when, 27, 57, 8, 57, 65]": 1,
+            "[:else, 28, 45, 6, 58, 9]": 0
+          },
+          "[:unless, 29, 84, 4, 86, 7]": {
+            "[:else, 30, 84, 4, 86, 7]": 2,
+            "[:then, 31, 85, 6, 85, 85]": 1
+          },
+          "[:if, 32, 88, 4, 90, 7]": {
+            "[:then, 33, 89, 6, 89, 84]": 1,
+            "[:else, 34, 88, 4, 90, 7]": 2
+          },
+          "[:if, 35, 95, 4, 105, 7]": {
+            "[:then, 36, 96, 6, 102, 9]": 2,
+            "[:else, 37, 104, 6, 104, 85]": 1
+          },
+          "[:if, 38, 96, 6, 102, 9]": {
+            "[:then, 39, 97, 8, 97, 86]": 1,
+            "[:else, 40, 98, 6, 101, 20]": 1
+          },
+          "[:if, 41, 98, 6, 101, 20]": {
+            "[:then, 42, 99, 8, 99, 72]": 1,
+            "[:else, 43, 101, 8, 101, 20]": 0
+          },
+          "[:if, 44, 110, 4, 118, 7]": {
+            "[:then, 45, 111, 6, 115, 9]": 1,
+            "[:else, 46, 117, 6, 117, 85]": 1
+          },
+          "[:if, 47, 111, 6, 115, 9]": {
+            "[:then, 48, 112, 8, 112, 72]": 1,
+            "[:else, 49, 114, 8, 114, 63]": 0
+          },
+          "[:if, 50, 123, 4, 131, 7]": {
+            "[:then, 51, 124, 6, 128, 9]": 1,
+            "[:else, 52, 130, 6, 130, 99]": 1
+          },
+          "[:if, 53, 124, 6, 128, 9]": {
+            "[:then, 54, 125, 8, 125, 72]": 1,
+            "[:else, 55, 127, 8, 127, 63]": 0
+          },
+          "[:if, 56, 136, 4, 140, 7]": {
+            "[:then, 57, 137, 6, 137, 69]": 2,
+            "[:else, 58, 139, 6, 139, 60]": 0
+          },
+          "[:if, 59, 146, 4, 152, 7]": {
+            "[:then, 60, 147, 6, 147, 42]": 1,
+            "[:else, 61, 148, 4, 151, 63]": 14
+          },
+          "[:if, 62, 148, 4, 151, 63]": {
+            "[:then, 63, 149, 6, 149, 65]": 6,
+            "[:else, 64, 150, 4, 151, 63]": 8
+          },
+          "[:if, 65, 150, 4, 151, 63]": {
+            "[:then, 66, 151, 6, 151, 63]": 8,
+            "[:else, 67, 150, 4, 151, 63]": 0
+          },
+          "[:if, 68, 157, 4, 162, 7]": {
+            "[:then, 69, 158, 6, 158, 45]": 1,
+            "[:else, 70, 161, 6, 161, 39]": 0
+          }
+        }
       },
       "/home/sebas/2025-2-grupo-60/app/controllers/application_controller.rb": {
         "lines": [
@@ -59,15 +385,15 @@
           null,
           1,
           1,
-          0,
+          669,
           null,
-          0,
+          651,
           null,
-          0,
+          6,
           null,
-          0,
+          6,
           null,
-          0,
+          6,
           null,
           0,
           null,
@@ -76,11 +402,141 @@
         ],
         "branches": {
           "[:case, 0, 4, 4, 15, 7]": {
-            "[:when, 1, 6, 6, 6, 37]": 0,
-            "[:when, 2, 8, 6, 8, 33]": 0,
-            "[:when, 3, 10, 6, 10, 31]": 0,
-            "[:when, 4, 12, 6, 12, 35]": 0,
+            "[:when, 1, 6, 6, 6, 37]": 651,
+            "[:when, 2, 8, 6, 8, 33]": 6,
+            "[:when, 3, 10, 6, 10, 31]": 6,
+            "[:when, 4, 12, 6, 12, 35]": 6,
             "[:else, 5, 14, 6, 14, 33]": 0
+          }
+        }
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/render_controller.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          null
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/models/mensaje.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          1,
+          null
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/resenas_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          1,
+          0,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          null,
+          1,
+          1,
+          0,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          null,
+          1,
+          null,
+          1,
+          2,
+          null,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          0,
+          null,
+          null,
+          null,
+          1,
+          1,
+          0,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          2,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 9, 4, 12, 7]": {
+            "[:then, 1, 10, 6, 11, 12]": 0,
+            "[:else, 2, 9, 4, 12, 7]": 0
+          },
+          "[:unless, 3, 14, 4, 17, 7]": {
+            "[:else, 4, 14, 4, 17, 7]": 0,
+            "[:then, 5, 15, 6, 16, 12]": 0
+          },
+          "[:if, 6, 26, 4, 31, 7]": {
+            "[:then, 7, 27, 6, 27, 109]": 0,
+            "[:else, 8, 29, 6, 30, 48]": 1
+          },
+          "[:if, 9, 38, 4, 43, 7]": {
+            "[:then, 10, 39, 6, 39, 92]": 0,
+            "[:else, 11, 41, 6, 42, 49]": 1
+          },
+          "[:unless, 12, 62, 4, 64, 7]": {
+            "[:else, 13, 62, 4, 64, 7]": 1,
+            "[:then, 14, 63, 6, 63, 92]": 0
+          },
+          "[:unless, 15, 68, 4, 70, 7]": {
+            "[:else, 16, 68, 4, 70, 7]": 1,
+            "[:then, 17, 69, 6, 69, 103]": 0
           }
         }
       },
@@ -214,6 +670,286 @@
         ],
         "branches": {}
       },
+      "/home/sebas/2025-2-grupo-60/app/jobs/application_job.rb": {
+        "lines": [
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/mailers/application_mailer.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/models/application_record.rb": {
+        "lines": [
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/models/user.rb": {
+        "lines": [
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0
+        ],
+        "branches": {}
+      }
+    },
+    "timestamp": 1761155142
+  },
+  "Unit Tests": {
+    "coverage": {
+      "/home/sebas/2025-2-grupo-60/app/models/user.rb": {
+        "lines": [
+          1,
+          null,
+          null,
+          0,
+          null,
+          null,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          null,
+          0,
+          null
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/channels/application_cable/channel.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/channels/application_cable/connection.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/admin/base_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/admin/panel_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/application_controller.rb": {
+        "lines": [
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/home_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/mensajes_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/registrations_controller.rb": {
+        "lines": [
+          0,
+          null,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/controllers/render_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
       "/home/sebas/2025-2-grupo-60/app/controllers/resenas_controller.rb": {
         "lines": [
           0,
@@ -320,10 +1056,6 @@
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
           null,
           0,
           0,
@@ -465,6 +1197,57 @@
           0,
           0,
           null,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/helpers/application_helper.rb": {
+        "lines": [
+          0,
+          0,
+          null
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/helpers/home_helper.rb": {
+        "lines": [
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/helpers/registrations_helper.rb": {
+        "lines": [
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/helpers/render_helper.rb": {
+        "lines": [
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/sebas/2025-2-grupo-60/app/helpers/reservas_helper.rb": {
+        "lines": [
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0,
@@ -563,49 +1346,8 @@
           0
         ],
         "branches": {}
-      },
-      "/home/sebas/2025-2-grupo-60/app/models/user.rb": {
-        "lines": [
-          0,
-          null,
-          null,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0
-        ],
-        "branches": {}
       }
     },
-    "timestamp": 1761122025
+    "timestamp": 1761147610
   }
 }

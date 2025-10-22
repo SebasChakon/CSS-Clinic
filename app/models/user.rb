@@ -13,6 +13,11 @@ class User < ApplicationRecord
   # Rol del usuario
   enum rol: { paciente: 0, doctor: 1, admin: 2 }
 
+  validates :firstname, presence: true
+  validates :lastname, presence: true
+  validates :username, presence: true
+  validates :phone, presence: true
+
 
   # Métodos para verificar el rol
   def paciente?

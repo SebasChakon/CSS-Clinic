@@ -8,10 +8,6 @@ class ReservasController < ApplicationController
       @reservas = Reserva.includes(:paciente, :doctor, resenas: :autor).order(fecha_hora: :desc)
 
       case params[:filtro]
-      when 'proximas'
-        @reservas = @reservas.where('fecha_hora >= ?', DateTime.now).order(fecha_hora: :asc)
-      when 'pasadas'
-        @reservas = @reservas.where('fecha_hora < ?', DateTime.now).order(fecha_hora: :desc)
       when 'pendientes'
         @reservas = @reservas.pendiente.order(fecha_hora: :asc)
       when 'confirmadas'
@@ -26,14 +22,14 @@ class ReservasController < ApplicationController
       @reservas = current_user.reservas_paciente.includes(:doctor, resenas: :autor).order(fecha_hora: :desc)
       
       case params[:filtro]
-      when 'proximas'
-        @reservas = @reservas.where('fecha_hora >= ?', DateTime.now).order(fecha_hora: :asc)
-      when 'pasadas'
-        @reservas = @reservas.where('fecha_hora < ?', DateTime.now).order(fecha_hora: :desc)
       when 'pendientes'
         @reservas = @reservas.pendiente.order(fecha_hora: :asc)
       when 'confirmadas'
         @reservas = @reservas.confirmada.order(fecha_hora: :asc)
+      when 'canceladas'
+        @reservas = @reservas.cancelada.order(fecha_hora: :desc)
+      when 'completadas'
+        @reservas = @reservas.completada.order(fecha_hora: :desc)
       end
       
       @proxima_cita = current_user.reservas_paciente
