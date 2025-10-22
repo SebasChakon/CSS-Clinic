@@ -1,0 +1,76 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="bg-white rounded-2xl shadow-sm border p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">Mis Horarios de Atención</h1>
+      <%= link_to 'Agregar Horario', new_horario_path, class: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium' %>
+    </div>
+
+    <!-- Formulario para nuevo horario -->
+    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Agregar Nuevo Horario</h2>
+      <%= form_with(model: @nuevo_horario, url: horarios_path, local: true) do |form| %>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <%= form.label :dia_semana, 'Día', class: 'block text-sm font-medium text-gray-700 mb-1' %>
+            <%= form.select :dia_semana, HorarioAtencion.dias_semana.keys.map { |d| [d.humanize, d] }, {}, 
+                          class: 'w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500' %>
+          </div>
+          
+          <div>
+            <%= form.label :hora_inicio, 'Hora Inicio', class: 'block text-sm font-medium text-gray-700 mb-1' %>
+            <%= form.time_field :hora_inicio, class: 'w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500' %>
+          </div>
+          
+          <div>
+            <%= form.label :hora_fin, 'Hora Fin', class: 'block text-sm font-medium text-gray-700 mb-1' %>
+            <%= form.time_field :hora_fin, class: 'w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500' %>
+          </div>
+          
+          <div class="flex items-end">
+            <%= form.submit 'Agregar Horario', class: 'bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium w-full' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Lista de horarios existentes -->
+    <% if @horarios.any? %>
+      <div class="space-y-4">
+        <% @horarios.group_by(&:dia_semana).each do |dia, horarios_dia| %>
+          <div class="border rounded-lg">
+            <div class="bg-gray-100 px-4 py-3 border-b">
+              <h3 class="font-semibold text-gray-800"><%= dia.humanize %></h3>
+            </div>
+            <div class="p-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% horarios_dia.each do |horario| %>
+                  <div class="flex justify-between items-center bg-white border rounded-lg p-3">
+                    <div>
+                      <p class="font-medium text-gray-800">
+                        <%= horario.hora_inicio.strftime('%H:%M') %> - <%= horario.hora_fin.strftime('%H:%M') %>
+                      </p>
+                      <span class="text-sm <%= horario.disponible ? 'text-green-600' : 'text-red-600' %>">
+                        <%= horario.disponible ? 'Disponible' : 'No disponible' %>
+                      </span>
+                    </div>
+                    <div class="flex space-x-2">
+                      <%= link_to 'Editar', edit_horario_path(horario), class: 'text-blue-600 hover:text-blue-800 text-sm' %>
+                      <%= link_to 'Eliminar', horario_path(horario), 
+                          method: :delete, 
+                          data: { confirm: '¿Estás seguro de eliminar este horario?' },
+                          class: 'text-red-600 hover:text-red-800 text-sm' %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-gray-500">No has agregado horarios de atención aún.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

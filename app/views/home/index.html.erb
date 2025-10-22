@@ -11,6 +11,50 @@
           class: "bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors" %>
     </div>
 
+    <!-- NUEVA SECCIÓN PARA DOCTORES -->
+    <% if current_user.doctor? %>
+    <div class="bg-white shadow-md rounded-lg p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Panel del Médico</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-6 hover:shadow-lg transition-all duration-200 rounded-lg border border-blue-200 bg-blue-50">
+          <div class="text-3xl text-blue-600 mb-4 text-center">🕒</div>
+          <h3 class="text-xl font-semibold text-blue-800 mb-3 text-center">Horarios de Atención</h3>
+          <p class="text-gray-600 mb-4 text-center text-sm">
+            Configura tus horarios disponibles para que los pacientes puedan agendar citas contigo.
+          </p>
+          <div class="text-center">
+            <%= link_to 'Gestionar Horarios', horarios_path, 
+                class: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium inline-block' %>
+          </div>
+        </div>
+
+        <div class="p-6 hover:shadow-lg transition-all duration-200 rounded-lg border border-green-200 bg-green-50">
+          <div class="text-3xl text-green-600 mb-4 text-center">📅</div>
+          <h3 class="text-xl font-semibold text-green-800 mb-3 text-center">Mis Citas</h3>
+          <p class="text-gray-600 mb-4 text-center text-sm">
+            Revisa y gestiona tus citas programadas con pacientes.
+          </p>
+          <div class="text-center">
+            <%= link_to 'Ver Citas', reservas_path, 
+                class: 'bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium inline-block' %>
+          </div>
+        </div>
+
+        <div class="p-6 hover:shadow-lg transition-all duration-200 rounded-lg border border-purple-200 bg-purple-50">
+          <div class="text-3xl text-purple-600 mb-4 text-center">👨‍⚕️</div>
+          <h3 class="text-xl font-semibold text-purple-800 mb-3 text-center">Mi Perfil</h3>
+          <p class="text-gray-600 mb-4 text-center text-sm">
+            Actualiza tu información personal y profesional.
+          </p>
+          <div class="text-center">
+            <%= link_to 'Editar Perfil', edit_user_registration_path, 
+                class: 'bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 font-medium inline-block' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% end %>
+
     <div class="bg-white shadow-md rounded-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
       <div class="p-6 hover:shadow-lg transition-all duration-200 rounded-lg border border-gray-100">
         <h2 class="text-2xl font-semibold text-blue-700 mb-3">Mis Reservas</h2>
@@ -28,5 +72,18 @@
         <%= link_to 'Ver Perfil', edit_user_registration_path, class: 'inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors' %>
       </div>
     </div>
+
+    <!-- NUEVA SECCIÓN PARA PACIENTES -->
+    <% if current_user.paciente? %>
+    <div class="bg-white shadow-md rounded-lg p-8 mt-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Agendar Nueva Cita</h2>
+      <div class="text-center">
+        <p class="text-gray-600 mb-4">Encuentra médicos disponibles y agenda tu cita</p>
+        <!-- ENLACE SIMPLIFICADO -->
+        <%= link_to 'Buscar Médicos', horarios_path, 
+            class: 'bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium text-lg' %>
+      </div>
+    </div>
+    <% end %>
   </div>
 </div>
