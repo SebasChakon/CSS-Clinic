@@ -4,45 +4,58 @@
       Editar <%= resource_name.to_s.humanize %>
     </h2>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
-                 html: { method: :put, multipart: true, class: "space-y-5" }) do |f| %>
+    <!--FOTO ACTUAL -->
+    <div class="flex flex-col items-center mb-6">
+      <% if current_user.avatar.attached? %>
+        <div class="mb-2">
+          <%= image_tag current_user.avatar, class: "w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg" %>
+        </div>
+        <p class="text-sm text-green-600 font-semibold">Foto de perfil cargada</p>
+      <% else %>
+        <div class="mb-2" style="width: 128px; height: 128px; border-radius: 50%; background-color: black; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+          <span style="color: white; font-weight: 600; font-size: 14px;">No foto</span>
+        </div>
+        <p class="text-sm text-gray-500">Sin foto de perfil</p>
+      <% end %>
+    </div>
 
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true, class: "space-y-5" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div>
+        <%= f.label :avatar, "Foto de perfil", class: "block text-gray-700 font-medium mb-1" %>
+        <%= f.file_field :avatar, accept: "image/*", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <small class="text-gray-500 block mt-1">Selecciona una imagen y haz clic en "Actualizar" al final del formulario</small>
+      </div>
+
+      <div>
         <%= f.label :username, "Nombre de usuario", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :username, value: resource.username, autocomplete: "username",
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :username, value: resource.username, autocomplete: "username", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :firstname, "Nombre", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :firstname, value: resource.firstname,
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :firstname, value: resource.firstname, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :lastname, "Apellido", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :lastname, value: resource.lastname,
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :lastname, value: resource.lastname, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :phone, "Teléfono", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.telephone_field :phone, value: resource.phone,
-                              class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.telephone_field :phone, value: resource.phone, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :description, "Descripción / Bio", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_area :description, value: resource.description, rows: 4,
-                        class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_area :description, value: resource.description, rows: 4, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :email, "Correo", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.email_field :email, value: resource.email, autocomplete: "email",
-                          class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.email_field :email, value: resource.email, autocomplete: "email", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <hr class="my-4">
@@ -50,26 +63,22 @@
       <div>
         <%= f.label :password, "Nueva contraseña", class: "block text-gray-700 font-medium mb-1" %>
         <small class="text-gray-500">(dejar en blanco si no quieres cambiarla)</small>
-        <%= f.password_field :password, autocomplete: "new-password",
-                             class: "w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :password_confirmation, "Confirmar contraseña", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.password_field :password_confirmation, autocomplete: "new-password",
-                             class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :current_password, "Contraseña actual", class: "block text-gray-700 font-medium mb-1" %>
         <small class="text-gray-500">(necesaria para confirmar cambios)</small>
-        <%= f.password_field :current_password, autocomplete: "current-password",
-                             class: "w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.password_field :current_password, autocomplete: "current-password", class: "w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div class="pt-4">
-        <%= f.submit "Actualizar",
-                     class: "w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition" %>
+        <%= f.submit "Actualizar", class: "w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition" %>
       </div>
     <% end %>
 
@@ -77,10 +86,7 @@
       <h3 class="text-lg font-semibold text-gray-700 mb-3">Cancelar cuenta</h3>
       <div class="flex justify-between items-center">
         <p class="text-gray-600">¿Descontento?</p>
-        <%= button_to "Eliminar mi cuenta", registration_path(resource_name),
-                      data: { confirm: "¿Estás seguro?" },
-                      method: :delete,
-                      class: "bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition" %>
+        <%= button_to "Eliminar mi cuenta", registration_path(resource_name), data: { confirm: "¿Estás seguro?" }, method: :delete, class: "bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition" %>
       </div>
     </div>
 

@@ -7,34 +7,46 @@
       <% else %>
         Mis Citas con Pacientes
       <% end %>
-      <span class="text-gray-500 text-lg font-normal ml-2">(<%= @reservas.count %>)</span>
+      <!--span class="text-gray-500 text-lg font-normal ml-2">(<%= @reservas.count %>)</span-->
     </h1>
     <div class="flex space-x-3">
       <%= link_to 'Volver al Inicio', root_path, class: 'bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-medium' %>
     </div>
   </div>
 
-  <!-- Estadísticas para Médicos -->
-  <% if current_user.doctor? && @estadisticas %>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-      <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
-        <div class="text-2xl font-bold text-blue-600"><%= @estadisticas[:total] %></div>
-        <div class="text-sm text-gray-600 mt-1">Total Citas</div>
-      </div>
-      <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
-        <div class="text-2xl font-bold text-yellow-600"><%= @estadisticas[:pendientes] %></div>
-        <div class="text-sm text-gray-600 mt-1">Pendientes</div>
-      </div>
-      <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
-        <div class="text-2xl font-bold text-green-600"><%= @estadisticas[:confirmadas] %></div>
-        <div class="text-sm text-gray-600 mt-1">Confirmadas</div>
-      </div>
-      <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
-        <div class="text-2xl font-bold text-purple-600"><%= @estadisticas[:proximas] %></div>
-        <div class="text-sm text-gray-600 mt-1">Próximas</div>
-      </div>
+<!-- Estadísticas para Médicos -->
+<% if current_user.doctor? && @estadisticas %>
+
+  <div class="md:col-span-4 bg-white rounded-xl shadow-sm border p-5 text-center">
+    <div class="text-2xl font-bold text-blue-600"><%= @estadisticas[:total] %></div>
+    <div class="text-sm text-gray-600 mt-1">Total Citas</div>
+  </div>
+    <br>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+
+    <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
+      <div class="text-2xl font-bold text-yellow-600"><%= @estadisticas[:pendientes] %></div>
+      <div class="text-sm text-gray-600 mt-1">Pendientes</div>
     </div>
-  <% end %>
+
+    <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
+      <div class="text-2xl font-bold text-purple-600"><%= @estadisticas[:confirmadas] %></div>
+      <div class="text-sm text-gray-600 mt-1">Confirmadas</div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
+      <div class="text-2xl font-bold text-red-600"><%= @estadisticas[:canceladas] %></div>
+      <div class="text-sm text-gray-600 mt-1">Canceladas</div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border p-5 text-center">
+      <div class="text-2xl font-bold text-green-600"><%= @estadisticas[:completadas] %></div>
+      <div class="text-sm text-gray-600 mt-1">Completadas</div>
+    </div>
+  </div>
+<% end %>
+
 
   <!-- Sección de Próxima Cita -->
   <% if @proxima_cita %>
@@ -121,18 +133,18 @@
     <div class="flex flex-wrap gap-3">
       <%= link_to 'Todas', reservas_path, 
           class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro].blank? ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
-      
-      <%= link_to 'Próximas', reservas_path(filtro: 'proximas'), 
-          class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'proximas' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
-      
-      <%= link_to 'Pasadas', reservas_path(filtro: 'pasadas'), 
-          class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'pasadas' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
-      
+            
       <%= link_to 'Pendientes', reservas_path(filtro: 'pendientes'), 
-          class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'pendientes' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+          class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'pendientes' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
       
       <%= link_to 'Confirmadas', reservas_path(filtro: 'confirmadas'), 
           class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'confirmadas' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+
+      <%= link_to 'Canceladas', reservas_path(filtro: 'canceladas'), 
+          class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'canceladas' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
+      
+      <%= link_to 'Completadas', reservas_path(filtro: 'completadas'), 
+          class: "px-6 py-3 rounded-full text-sm font-medium #{params[:filtro] == 'completadas' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
     </div>
   </div>
 
@@ -235,6 +247,7 @@
           <%= link_to 'Volver al Inicio', root_path, class: 'bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-medium' %>
           <%= link_to 'Recargar', reservas_path, class: 'bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium' %>
         </div>
+        <br>
       </div>
     </div>
   <% end %>

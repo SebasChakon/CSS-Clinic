@@ -8,20 +8,23 @@ class Admin::PanelController < Admin::BaseController
     user = User.find(params[:id])
 
     if user.admin?
-      redirect_to admin_panel_path, alert: "No se puede convertir a un admin en médico."
+      flash[:alert] = "No se puede convertir a un admin en médico."
+      redirect_to admin_panel_path
       return
     end
 
     if user.doctor?
-      redirect_to admin_panel_path, notice: "#{user.nombre_completo} ya es médico."
+      flash[:notice] = "#{user.nombre_completo} ya es médico."
+      redirect_to admin_panel_path
       return
     end
 
-    
     if user.doctor!
-      redirect_to admin_panel_path, notice: "#{user.nombre_completo} ahora es médico."
+      flash[:notice] = "#{user.nombre_completo} ahora es médico."
+      redirect_to admin_panel_path
     else
-      redirect_to admin_panel_path, alert: "No se pudo actualizar el usuario."
+      flash[:alert] = "No se pudo actualizar el usuario."
+      redirect_to admin_panel_path
     end
   end
 end

@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :reservas_doctor, class_name: 'Reserva', foreign_key: 'doctor_id'
   has_many :resenas, foreign_key: 'autor_id', dependent: :nullify
 
+  has_one_attached :avatar
   # Rol del usuario
   enum rol: { paciente: 0, doctor: 1, admin: 2 }
 

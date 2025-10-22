@@ -9,6 +9,7 @@ class Reserva < ApplicationRecord
 
   def average_rating
     resenas.average(:rating)&.round(1) || 0
+    
   end
   
 end

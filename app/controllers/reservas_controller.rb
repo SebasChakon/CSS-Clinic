@@ -1,7 +1,6 @@
 class ReservasController < ApplicationController
   before_action :authenticate_user!
   before_action :set_reserva, only: [:show, :edit, :update, :cancelar, :confirmar, :completar]
-  before_action :ensure_verified_doctor!, only: [:edit, :update, :confirmar, :completar]
 
 
   def index
@@ -73,7 +72,9 @@ class ReservasController < ApplicationController
         total: current_user.reservas_doctor.count,
         pendientes: current_user.reservas_doctor.pendiente.count,
         confirmadas: current_user.reservas_doctor.confirmada.count,
-        proximas: current_user.reservas_doctor.where('fecha_hora >= ?', DateTime.now).count
+        canceladas: current_user.reservas_doctor.cancelada.count,
+        completadas: current_user.reservas_doctor.completada.count,
+
       }
     end
   end

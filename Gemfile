@@ -69,3 +69,17 @@ end
 gem 'devise'
 
 gem "tailwindcss-rails"
+
+gem 'cloudinary'
+
+gem "activestorage-cloudinary-service"
+
+group :development, :test do
+  gem 'dotenv-rails'
+end
+
+group :test do
+  gem 'minitest'
+  gem 'minitest-reporters'
+  gem 'simplecov', require: false
+end

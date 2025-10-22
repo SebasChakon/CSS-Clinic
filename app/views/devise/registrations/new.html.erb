@@ -1,21 +1,15 @@
 <div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-10">
   <div class="bg-white shadow-lg rounded-xl w-full max-w-md p-8">
     <h2 class="text-2xl font-semibold text-blue-600 mb-6 text-center">Registrarse</h2>
-
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
-                 html: { class: "space-y-5" }) do |f| %>
+    
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5", multipart: true }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
-
-      <div>
-        <%= f.label :rol, "Tipo de usuario", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.select :rol, [['Paciente', 'paciente'], ['Médico', 'doctor']], {},
-                     class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
-      </div>
+      
+      <%= f.hidden_field :rol, value: 'paciente' %>
 
       <div>
         <%= f.label :email, "Correo electrónico", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email",
-                          class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
@@ -23,43 +17,41 @@
         <% if @minimum_password_length %>
           <small class="text-gray-500">(<%= @minimum_password_length %> caracteres mínimo)</small>
         <% end %>
-        <%= f.password_field :password, autocomplete: "new-password",
-                             class: "w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :password_confirmation, "Confirmar contraseña", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.password_field :password_confirmation, autocomplete: "new-password",
-                             class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :username, "Nombre de usuario", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :username,
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :username, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :firstname, "Nombre", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :firstname,
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :firstname, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :lastname, "Apellido", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :lastname,
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :lastname, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
         <%= f.label :phone, "Teléfono", class: "block text-gray-700 font-medium mb-1" %>
-        <%= f.text_field :phone,
-                         class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+        <%= f.text_field :phone, class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
       </div>
 
       <div>
-        <%= f.submit "Crear cuenta",
-                     class: "w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition" %>
+        <%= f.label :avatar, "Foto de perfil", class: "block text-gray-700 font-medium mb-1" %>
+        <%= f.file_field :avatar, accept: "image/*", class: "w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400" %>
+      </div>
+
+      <div>
+        <%= f.submit "Crear cuenta", class: "w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition" %>
       </div>
     <% end %>
 
