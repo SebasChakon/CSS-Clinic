@@ -146,7 +146,9 @@ class ReservasController < ApplicationController
   private
 
   def set_reserva
-    if current_user.paciente?
+    if current_user.admin?
+      @reserva = Reserva.find(params[:id])
+    elsif current_user.paciente?
       @reserva = current_user.reservas_paciente.find(params[:id])
     elsif current_user.doctor?
       @reserva = current_user.reservas_doctor.find(params[:id])

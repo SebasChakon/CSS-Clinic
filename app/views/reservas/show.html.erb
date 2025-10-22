@@ -106,7 +106,7 @@
       <% end %>
 
       <%# Botón para crear reseña: solo paciente y sólo si la cita ya pasó o está completada y no tiene reseña %>
-      <% if @reserva.paciente_id == current_user.id && @reserva.fecha_hora.present? && (@reserva.fecha_hora < Time.current || @reserva.completada?) && !@reserva.resenas.exists?(autor: current_user) %>
+      <% if @reserva.paciente_id == current_user.id && @reserva.completada? && !@reserva.resenas.exists?(autor: current_user) %>
         <div class="mt-4">
           <%= link_to 'Dejar Reseña', new_reserva_resena_path(@reserva), class: 'bg-green-600 text-white px-4 py-2 rounded' %>
         </div>
