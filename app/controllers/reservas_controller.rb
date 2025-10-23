@@ -120,19 +120,8 @@ class ReservasController < ApplicationController
   def new
     if current_user.paciente?
       @doctor = User.doctores.find(params[:doctor_id])
-      
-      # Obtener horarios disponibles del doctor
-      @horarios_disponibles = @doctor.horario_atencions.disponibles.order(:dia_semana, :hora_inicio)
-      
-      # Valores por defecto
-      duracion_default = @horarios_disponibles.first&.duracion_cita || 30
-      ubicacion_default = @horarios_disponibles.first&.ubicacion || "Consultorio del doctor"
-      
-      @reserva = Reserva.new(
-        doctor: @doctor,
-        duracion: duracion_default,
-        ubicacion: ubicacion_default
-      )
+      @horarios_disponibles = @doctor.horario_atencions.disponibles.futuros.order(:fecha, :hora_inicio)
+      @reserva = Reserva.new(doctor: @doctor)
     else
       redirect_to reservas_path, alert: 'Solo los pacientes pueden agendar citas'
     end
@@ -140,41 +129,34 @@ class ReservasController < ApplicationController
 
   def create
     if current_user.paciente?
-      @reserva = current_user.reservas_paciente.new(reserva_params)
+      horario_id = params[:reserva].delete(:horario_id)
+      horario_seleccionado = HorarioAtencion.find_by(id: horario_id) if horario_id.present?
       
-      # Buscar el horario seleccionado para obtener duración, ubicación y MARCAR COMO NO DISPONIBLE
-      if params[:reserva][:fecha_hora].present?
-        fecha_hora = DateTime.parse(params[:reserva][:fecha_hora])
-        dia_semana = fecha_hora.strftime('%A').downcase
-        hora_inicio = fecha_hora.strftime('%H:%M')
-        
-        horario_seleccionado = HorarioAtencion.find_by(
-          doctor_id: params[:reserva][:doctor_id],
-          dia_semana: dia_semana,
-          hora_inicio: hora_inicio
+      if horario_seleccionado
+        reserva_final_params = reserva_params.merge(
+          doctor_id: horario_seleccionado.doctor_id,
+          fecha_hora: "#{horario_seleccionado.fecha} #{horario_seleccionado.hora_inicio.strftime('%H:%M')}",
+          duracion: horario_seleccionado.duracion_cita,
+          ubicacion: horario_seleccionado.ubicacion
         )
         
-        if horario_seleccionado
-          @reserva.duracion = horario_seleccionado.duracion_cita
-          @reserva.ubicacion = horario_seleccionado.ubicacion
-          
-          # MARCAR EL HORARIO COMO NO DISPONIBLE
-          horario_seleccionado.update(disponible: false)
-        end
+        @reserva = current_user.reservas_paciente.new(reserva_final_params)
+        horario_seleccionado.update(disponible: false)
+      else
+        @reserva = current_user.reservas_paciente.new(reserva_params)
       end
       
       if @reserva.save
         redirect_to @reserva, notice: 'Cita agendada exitosamente. Espera la confirmación del médico.'
       else
         @doctor = User.doctores.find(params[:reserva][:doctor_id])
-        @horarios_disponibles = @doctor.horario_atencions.disponibles.order(:dia_semana, :hora_inicio)
+        @horarios_disponibles = @doctor.horario_atencions.disponibles.futuros.order(:fecha, :hora_inicio)
         render :new
       end
     else
       redirect_to reservas_path, alert: 'Solo los pacientes pueden agendar citas'
     end
   end
-
 
   private
 
@@ -190,7 +172,6 @@ class ReservasController < ApplicationController
     if current_user.doctor?
       params.require(:reserva).permit(:notas)
     else
-      # Pacientes pueden crear reservas con estos campos
       params.require(:reserva).permit(:doctor_id, :fecha_hora, :motivo, :duracion, :ubicacion)
     end
   end

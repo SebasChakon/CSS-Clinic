@@ -1,34 +1,13 @@
 <div class="container mx-auto px-4 py-8 max-w-4xl">
   <div class="bg-white rounded-2xl shadow-sm border p-6">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">Agendar Nueva Cita</h1>
+      <h1 class="text-2xl font-bold text-gray-900">Agendar Cita con <%= @doctor.nombre_completo %></h1>
       <%= link_to 'Volver', reservas_path, class: 'bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 font-medium' %>
     </div>
 
     <%= form_with(model: @reserva, local: true) do |form| %>
       <%= form.hidden_field :doctor_id, value: @doctor.id %>
       
-      <!-- Información fija del doctor -->
-      <div class="bg-blue-50 rounded-lg p-4 mb-6">
-        <h3 class="text-lg font-semibold text-blue-800 mb-3">Información del Médico</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-blue-700 mb-1">Médico:</label>
-            <p class="text-lg font-semibold text-gray-900"><%= @doctor.nombre_completo %></p>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-blue-700 mb-1">Ubicación:</label>
-            <p class="text-lg font-semibold text-gray-900">
-              <% if @horarios_disponibles.first&.ubicacion.present? %>
-                <%= @horarios_disponibles.first.ubicacion %>
-              <% else %>
-                Consultorio principal
-              <% end %>
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div class="mb-6">
         <label class="block text-sm font-medium text-gray-700 mb-2">Motivo de la consulta:</label>
         <%= form.text_area :motivo, rows: 3, placeholder: 'Describe el motivo de tu consulta...', class: 'w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500', required: true %>
@@ -39,31 +18,48 @@
         
         <% if @horarios_disponibles.any? %>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-            <% @horarios_disponibles.group_by(&:dia_semana).each do |dia, horarios| %>
+            <% @horarios_disponibles.group_by(&:fecha).each do |fecha, horarios| %>
               <div class="bg-gray-50 rounded-lg p-4">
-                <%# Calcular la fecha CORRECTA para el próximo día de la semana %>
-                <% fecha_real = Date.today.next_week.beginning_of_week + dia.to_i.days %>
                 <h3 class="font-semibold text-gray-800 mb-3">
-                  <%= dia.humanize %> - <%= l(fecha_real, format: :short) %>
+                  <%= case fecha.wday
+                      when 0 then 'Domingo'
+                      when 1 then 'Lunes' 
+                      when 2 then 'Martes'
+                      when 3 then 'Miércoles'
+                      when 4 then 'Jueves'
+                      when 5 then 'Viernes'
+                      when 6 then 'Sábado'
+                      end %> - 
+                  <%= fecha.strftime('%d de ') %><%= case fecha.month
+                      when 1 then 'enero'
+                      when 2 then 'febrero'
+                      when 3 then 'marzo'
+                      when 4 then 'abril'
+                      when 5 then 'mayo'
+                      when 6 then 'junio'
+                      when 7 then 'julio'
+                      when 8 then 'agosto'
+                      when 9 then 'septiembre'
+                      when 10 then 'octubre'
+                      when 11 then 'noviembre'
+                      when 12 then 'diciembre'
+                      end %><%= fecha.strftime(' de %Y') %>
                 </h3>
                 <div class="space-y-2">
                   <% horarios.each do |horario| %>
                     <label class="block cursor-pointer p-3 rounded border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors">
                       <div class="flex items-center">
-                        <%= form.radio_button :fecha_hora, 
-                              "#{fecha_real} #{horario.hora_inicio.strftime('%H:%M')}", 
-                              class: 'text-blue-600 focus:ring-blue-500 mr-3',
-                              required: true,
-                              data: { 
-                                duracion: horario.duracion_cita,
-                                ubicacion: horario.ubicacion 
-                              } %>
+                        <%= form.radio_button :horario_id, horario.id,
+                            class: 'text-blue-600 focus:ring-blue-500 mr-3',
+                            required: true %>
                         <div class="flex-1">
                           <div class="font-medium text-gray-900">
                             <%= horario.hora_inicio.strftime('%H:%M') %> - <%= horario.hora_fin.strftime('%H:%M') %>
                           </div>
                           <div class="text-sm text-gray-600 mt-1">
                             Duración: <strong><%= horario.duracion_cita %> minutos</strong>
+                            <br>
+                            Ubicación: <strong><%= horario.ubicacion %></strong>
                           </div>
                         </div>
                       </div>
@@ -81,9 +77,9 @@
         <% end %>
       </div>
 
-      <!-- Campos ocultos para duración y ubicación -->
       <%= form.hidden_field :duracion, id: 'duracion-field', value: @horarios_disponibles.first&.duracion_cita || 30 %>
       <%= form.hidden_field :ubicacion, id: 'ubicacion-field', value: @horarios_disponibles.first&.ubicacion || "Consultorio del doctor" %>
+      <%= form.hidden_field :fecha_hora, value: "" %>
 
       <div class="flex justify-end space-x-3">
         <%= link_to 'Cancelar', reservas_path, class: 'bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 font-medium' %>

@@ -47,7 +47,33 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-500">Fecha y Hora:</label>
-            <p class="mt-1 text-sm text-gray-900"><%= l(@reserva.fecha_hora, format: :long) %></p>
+            <p class="mt-1 text-sm text-gray-900">
+              <% fecha = @reserva.fecha_hora.to_date %>
+              <%= case fecha.wday
+                  when 0 then 'Domingo'
+                  when 1 then 'Lunes' 
+                  when 2 then 'Martes'
+                  when 3 then 'Miércoles'
+                  when 4 then 'Jueves'
+                  when 5 then 'Viernes'
+                  when 6 then 'Sábado'
+                  end %>,
+              <%= fecha.strftime('%d de ') %><%= case fecha.month
+                  when 1 then 'enero'
+                  when 2 then 'febrero'
+                  when 3 then 'marzo'
+                  when 4 then 'abril'
+                  when 5 then 'mayo'
+                  when 6 then 'junio'
+                  when 7 then 'julio'
+                  when 8 then 'agosto'
+                  when 9 then 'septiembre'
+                  when 10 then 'octubre'
+                  when 11 then 'noviembre'
+                  when 12 then 'diciembre'
+                  end %><%= fecha.strftime(' de %Y') %> a las 
+              <%= @reserva.fecha_hora.strftime('%H:%M') %>
+            </p>
           </div>
           
           <div>

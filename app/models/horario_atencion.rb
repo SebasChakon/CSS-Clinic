@@ -1,37 +1,53 @@
 class HorarioAtencion < ApplicationRecord
   belongs_to :doctor, class_name: 'User'
 
-  enum dia_semana: {
-    lunes: 0, martes: 1, miércoles: 2, jueves: 3, 
-    viernes: 4, sábado: 5, domingo: 6
-  }
-
-  attribute :disponible, :boolean, default: true
-
-  validates :dia_semana, presence: true
+  validates :fecha, presence: true
   validates :hora_inicio, presence: true
   validates :hora_fin, presence: true
   validates :doctor_id, presence: true
   validates :ubicacion, presence: true
   
+  validate :fecha_no_pasada
   validate :hora_fin_mayor_a_inicio
   validate :duracion_minima
   validate :no_solapamiento_horarios
 
   scope :disponibles, -> { where(disponible: true) }
   scope :por_doctor, ->(doctor_id) { where(doctor_id: doctor_id) }
-  scope :por_dia, ->(dia) { where(dia_semana: dia) }
+  scope :futuros, -> { where('fecha >= ?', Date.today) }
+  scope :por_fecha, ->(fecha) { where(fecha: fecha) }
 
-  def self.dias_semana_options
-    dia_semanas.keys.map { |d| [d.humanize, d] }
-  end
+  attribute :disponible, :boolean, default: true
 
   def duracion_cita
     return 0 unless hora_inicio.present? && hora_fin.present?
     ((hora_fin - hora_inicio) / 60).to_i
   end
 
+  def nombre_dia
+    case fecha.wday
+    when 0 then 'Domingo'
+    when 1 then 'Lunes' 
+    when 2 then 'Martes'
+    when 3 then 'Miércoles'
+    when 4 then 'Jueves'
+    when 5 then 'Viernes'
+    when 6 then 'Sábado'
+    end
+  end
+
+  def fecha_formateada
+    fecha.strftime('%d de %B de %Y')
+  end
+
   private
+
+  def fecha_no_pasada
+    return unless fecha.present?
+    if fecha < Date.today
+      errors.add(:fecha, "no puede ser en el pasado")
+    end
+  end
 
   def hora_fin_mayor_a_inicio
     return unless hora_inicio.present? && hora_fin.present?
@@ -50,9 +66,9 @@ class HorarioAtencion < ApplicationRecord
   end
 
   def no_solapamiento_horarios
-    return unless doctor_id.present? && dia_semana.present? && hora_inicio.present? && hora_fin.present?
+    return unless doctor_id.present? && fecha.present? && hora_inicio.present? && hora_fin.present?
     
-    horarios_solapados = HorarioAtencion.where(doctor_id: doctor_id, dia_semana: dia_semana)
+    horarios_solapados = HorarioAtencion.where(doctor_id: doctor_id, fecha: fecha)
                                       .where.not(id: id)
                                       .where("(hora_inicio < ? AND hora_fin > ?) OR (hora_inicio < ? AND hora_fin > ?)", 
                                              hora_fin, hora_inicio, hora_inicio, hora_fin)

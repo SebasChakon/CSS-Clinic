@@ -4,12 +4,12 @@ class HorariosController < ApplicationController
 
   def index
     if current_user.doctor?
-      @horarios = current_user.horario_atencions.order(:dia_semana, :hora_inicio)
+      @horarios = current_user.horario_atencions.futuros.order(:fecha, :hora_inicio)
       @nuevo_horario = HorarioAtencion.new
       render 'doctor_index'
     else
       @doctores = User.doctores.joins(:horario_atencions)
-                      .where(horario_atencions: { disponible: true })
+                      .where(horario_atencions: { disponible: true, fecha: Date.today.. })
                       .distinct
       render 'paciente_index'
     end
@@ -63,6 +63,6 @@ class HorariosController < ApplicationController
   end
 
   def horario_params
-    params.require(:horario_atencion).permit(:dia_semana, :hora_inicio, :hora_fin, :ubicacion)
+    params.require(:horario_atencion).permit(:fecha, :hora_inicio, :hora_fin, :ubicacion)
   end
 end

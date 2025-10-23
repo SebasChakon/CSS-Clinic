@@ -160,7 +160,31 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-500 mb-2">FECHA Y HORA</label>
                   <p class="text-lg font-bold text-gray-900">
-                    <%= l(reserva.fecha_hora, format: :long) %>
+                    <% fecha = reserva.fecha_hora.to_date %>
+                    <%= case fecha.wday
+                        when 0 then 'Domingo'
+                        when 1 then 'Lunes' 
+                        when 2 then 'Martes'
+                        when 3 then 'Miércoles'
+                        when 4 then 'Jueves'
+                        when 5 then 'Viernes'
+                        when 6 then 'Sábado'
+                        end %>,
+                    <%= fecha.strftime('%d de ') %><%= case fecha.month
+                        when 1 then 'enero'
+                        when 2 then 'febrero'
+                        when 3 then 'marzo'
+                        when 4 then 'abril'
+                        when 5 then 'mayo'
+                        when 6 then 'junio'
+                        when 7 then 'julio'
+                        when 8 then 'agosto'
+                        when 9 then 'septiembre'
+                        when 10 then 'octubre'
+                        when 11 then 'noviembre'
+                        when 12 then 'diciembre'
+                        end %><%= fecha.strftime(' de %Y') %> a las 
+                    <%= reserva.fecha_hora.strftime('%H:%M') %>
                   </p>
                   <p class="text-sm text-gray-600 mt-1">[Duración: <%= reserva.duracion %> min]</p>
                 </div>
@@ -207,13 +231,12 @@
       <% end %>
     </div>
 
-    <!-- Botón Volver al Final -->
+    <!-- Botón Volver -->
     <div class="flex justify-center mt-8">
       <%= link_to 'Volver al Inicio', root_path, class: 'bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 font-medium' %>
     </div>
     
   <% else %>
-    <!-- Estado Vacío -->
     <div class="bg-white rounded-2xl shadow-sm border p-12 text-center">
       <div class="max-w-md mx-auto">
         <div class="text-6xl mb-4"></div>
