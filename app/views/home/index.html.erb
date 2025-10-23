@@ -28,5 +28,27 @@
         <%= link_to 'Ver Perfil', edit_user_registration_path, class: 'inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors' %>
       </div>
     </div>
+
+    <!-- Solo para doctores, gestión de horarios -->
+    <% if current_user.doctor? %>
+    <div class="bg-white shadow-md rounded-lg p-8 mt-8 text-center">
+      <h2 class="text-2xl font-semibold text-green-700 mb-3">Gestión Médica</h2>
+      <p class="text-gray-600 mb-6">
+        Gestiona tus horarios de atención y citas con pacientes.
+      </p>
+      <%= link_to 'Gestionar Horarios', horarios_path, class: 'inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors' %>
+    </div>
+    <% end %>
+
+    <!-- Solo para pacientes, buscar médicos -->
+    <% if current_user.paciente? %>
+    <div class="bg-white shadow-md rounded-lg p-8 mt-8 text-center">
+      <h2 class="text-2xl font-semibold text-green-700 mb-3">Agendar Nueva Cita</h2>
+      <p class="text-gray-600 mb-6">
+        Encuentra médicos disponibles y agenda tu próxima cita médica.
+      </p>
+      <%= link_to 'Buscar Médicos', horarios_path, class: 'inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors' %>
+    </div>
+    <% end %>
   </div>
 </div>

@@ -80,7 +80,6 @@ class ReservasController < ApplicationController
   end
 
   def edit
-    # Solo doctores pueden editar y solo si NO está cancelada
     unless current_user.doctor?
       redirect_to reservas_path, alert: 'No tienes permisos para editar esta reserva'
     end
@@ -91,7 +90,6 @@ class ReservasController < ApplicationController
   end
 
   def update
-    # Solo doctores pueden editar y solo si NO está cancelada
     if current_user.doctor?
       if @reserva.cancelada?
         redirect_to @reserva, alert: 'No se pueden editar notas de una cita cancelada'
@@ -106,7 +104,6 @@ class ReservasController < ApplicationController
   end
 
   def confirmar
-    # Solo doctores pueden confirmar
     if current_user.doctor?
       if @reserva.update(estado: :confirmada)
         redirect_to @reserva, notice: 'Reserva confirmada exitosamente.'
@@ -119,7 +116,6 @@ class ReservasController < ApplicationController
   end
 
   def completar
-    # Solo doctores pueden completar
     if current_user.doctor?
       if @reserva.update(estado: :completada)
         redirect_to @reserva, notice: 'Reserva marcada como completada.'
@@ -132,11 +128,51 @@ class ReservasController < ApplicationController
   end
 
   def cancelar
-    # Tanto pacientes como doctores pueden cancelar
     if @reserva.update(estado: :cancelada)
       redirect_to @reserva, notice: 'Reserva cancelada exitosamente.'
     else
       render :show, alert: 'No se pudo cancelar la reserva.'
+    end
+  end
+
+  def new
+    if current_user.paciente?
+      @doctor = User.doctores.find(params[:doctor_id])
+      @horarios_disponibles = @doctor.horario_atencions.disponibles.futuros.order(:fecha, :hora_inicio)
+      @reserva = Reserva.new(doctor: @doctor)
+    else
+      redirect_to reservas_path, alert: 'Solo los pacientes pueden agendar citas'
+    end
+  end
+
+  def create
+    if current_user.paciente?
+      horario_id = params[:reserva].delete(:horario_id)
+      horario_seleccionado = HorarioAtencion.find_by(id: horario_id) if horario_id.present?
+      
+      if horario_seleccionado
+        reserva_final_params = reserva_params.merge(
+          doctor_id: horario_seleccionado.doctor_id,
+          fecha_hora: "#{horario_seleccionado.fecha} #{horario_seleccionado.hora_inicio.strftime('%H:%M')}",
+          duracion: horario_seleccionado.duracion_cita,
+          ubicacion: horario_seleccionado.ubicacion
+        )
+        
+        @reserva = current_user.reservas_paciente.new(reserva_final_params)
+        horario_seleccionado.update(disponible: false)
+      else
+        @reserva = current_user.reservas_paciente.new(reserva_params)
+      end
+      
+      if @reserva.save
+        redirect_to @reserva, notice: 'Cita agendada exitosamente. Espera la confirmación del médico.'
+      else
+        @doctor = User.doctores.find(params[:reserva][:doctor_id])
+        @horarios_disponibles = @doctor.horario_atencions.disponibles.futuros.order(:fecha, :hora_inicio)
+        render :new
+      end
+    else
+      redirect_to reservas_path, alert: 'Solo los pacientes pueden agendar citas'
     end
   end
 
@@ -153,12 +189,10 @@ class ReservasController < ApplicationController
   end
 
   def reserva_params
-    # SOLO doctores pueden editar notas
     if current_user.doctor?
       params.require(:reserva).permit(:notas)
     else
-      # Pacientes NO pueden editar nada
-      params.require(:reserva).permit()
+      params.require(:reserva).permit(:doctor_id, :fecha_hora, :motivo, :duracion, :ubicacion)
     end
   end
 end
