@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 class HomeController < ApplicationController
-  def index
-  end
-  def unregistered
-  end  
+  def index; end
+
+  def unregistered; end
 end

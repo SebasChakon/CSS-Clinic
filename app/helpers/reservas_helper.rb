@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/helpers/reservas_helper.rb
 module ReservasHelper
   def estado_badge_class(estado)

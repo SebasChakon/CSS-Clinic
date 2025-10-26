@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateReservas < ActiveRecord::Migration[7.1]
   def change
     create_table :reservas do |t|
@@ -7,7 +9,7 @@ class CreateReservas < ActiveRecord::Migration[7.1]
       t.text :motivo, null: false
       t.text :notas
       t.integer :estado, default: 0
-      
+
       t.timestamps
     end
   end

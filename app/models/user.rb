@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-
 
   has_many :reservas_paciente, class_name: 'Reserva', foreign_key: 'paciente_id'
   has_many :reservas_doctor, class_name: 'Reserva', foreign_key: 'doctor_id'
@@ -10,7 +11,7 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
-  enum rol: { paciente: 0, doctor: 1, admin: 2 }
+  enum :rol, { paciente: 0, doctor: 1, admin: 2 }
 
   validates :firstname, presence: true
   validates :lastname, presence: true
