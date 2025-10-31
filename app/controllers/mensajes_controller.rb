@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MensajesController < ApplicationController
   before_action :set_reserva
   before_action :authenticate_user!
@@ -12,7 +14,7 @@ class MensajesController < ApplicationController
     @mensaje.user = current_user
 
     if @mensaje.save
-      redirect_to reserva_mensajes_path(@reserva), notice: "Mensaje enviado"
+      redirect_to reserva_mensajes_path(@reserva), notice: 'Mensaje enviado'
     else
       @mensajes = @reserva.mensajes.includes(:user).order(:created_at)
       render :index, status: :unprocessable_entity

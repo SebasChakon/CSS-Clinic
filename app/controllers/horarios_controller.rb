@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class HorariosController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_horario, only: [:edit, :update, :destroy]
+  before_action :set_horario, only: %i[edit update destroy]
 
   def index
     if current_user.doctor?
@@ -9,7 +11,7 @@ class HorariosController < ApplicationController
       render 'doctor_index'
     else
       @doctores = User.doctores.joins(:horario_atencions)
-                      .where(horario_atencions: { disponible: true, fecha: Date.today.. })
+                      .where(horario_atencions: { disponible: true, fecha: Time.zone.today.. })
                       .distinct
       render 'paciente_index'
     end
@@ -20,19 +22,19 @@ class HorariosController < ApplicationController
     @horario = HorarioAtencion.new
   end
 
+  def edit
+    authorize_doctor
+  end
+
   def create
     authorize_doctor
     @horario = current_user.horario_atencions.new(horario_params)
-    
+
     if @horario.save
       redirect_to horarios_path, notice: 'Horario agregado exitosamente.'
     else
       render :new
     end
-  end
-
-  def edit
-    authorize_doctor
   end
 
   def update
@@ -57,9 +59,9 @@ class HorariosController < ApplicationController
   end
 
   def authorize_doctor
-    unless current_user.doctor?
-      redirect_to root_path, alert: 'No tienes permisos para acceder a esta página.'
-    end
+    return if current_user.doctor?
+
+    redirect_to root_path, alert: 'No tienes permisos para acceder a esta página.'
   end
 
   def horario_params

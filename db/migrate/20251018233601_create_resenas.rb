@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateResenas < ActiveRecord::Migration[7.1]
   def change
     create_table :resenas do |t|
@@ -9,6 +11,6 @@ class CreateResenas < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :resenas, [:reserva_id, :autor_id], unique: true
+    add_index :resenas, %i[reserva_id autor_id], unique: true
   end
 end
