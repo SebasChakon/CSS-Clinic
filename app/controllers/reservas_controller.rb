@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class ReservasController < ApplicationController
   before_action :authenticate_user!
   before_action :set_reserva, only: %i[show edit update cancelar confirmar completar]
@@ -177,20 +175,14 @@ class ReservasController < ApplicationController
   end
 
   def farmacias_cercanas
-    latitud = params[:lat] || (session[:ultima_ubicacion] && session[:ultima_ubicacion]['lat']) || (session[:ultima_ubicacion] && session[:ultima_ubicacion][:lat])
-    longitud = params[:lng] || (session[:ultima_ubicacion] && session[:ultima_ubicacion]['lng']) || (session[:ultima_ubicacion] && session[:ultima_ubicacion][:lng])
-    
-    if latitud.blank? || longitud.blank?
-      redirect_to root_path, alert: "No se pudieron obtener las coordenadas. Usa 'Ubicación real' primero."
-      return
-    end
-    @farmacias = NominatimService.buscar_farmacias(latitud, longitud)
+    latitud = params[:lat] || (session[:ultima_ubicacion] && session[:ultima_ubicacion]['lat']) || -33.4590
+    longitud = params[:lng] || (session[:ultima_ubicacion] && session[:ultima_ubicacion]['lng']) || -70.6463
+    @farmacias = NominatimService.buscar_farmacias(latitud.to_f, longitud.to_f, 3) # 3km de radio
     session[:ultimas_farmacias] = @farmacias
     session[:ultima_ubicacion] = {
       lat: latitud.to_f,
       lng: longitud.to_f
     }
-
     redirect_to root_path, notice: "Encontradas #{@farmacias.count} farmacias cerca de ti"
   end
 

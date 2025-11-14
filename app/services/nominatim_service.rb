@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'net/http'
 require 'uri'
 require 'json'
@@ -7,60 +5,97 @@ require 'json'
 class NominatimService
   BASE_URL = 'https://nominatim.openstreetmap.org/search'
 
-  def self.buscar_farmacias(latitud, longitud, radio_km = 20)
+  def self.buscar_farmacias(latitud, longitud, radio_km = 3)
     lat = latitud.to_f
     lng = longitud.to_f
     return [] if lat.zero? || lng.zero?
-
-    buscar_y_filtrar_localmente(lat, lng, radio_km)
+    bbox = calcular_bounding_box(lat, lng, radio_km)
+    resultados = buscar_con_bounding_box(bbox)
+    
+    # Filtrar por distancia real
+    resultados_filtrados = filtrar_por_distancia_real(resultados, lat, lng, radio_km)
+    parsear_resultados(resultados_filtrados)
   end
 
-  def self.buscar_y_filtrar_localmente(latitud, longitud, radio_km)
+  def self.calcular_bounding_box(lat, lon, radio_km)
+    offset = radio_km * 0.009
+    left = lon - offset
+    right = lon + offset  
+    bottom = lat - offset
+    top = lat + offset
+    
+    "#{left},#{bottom},#{right},#{top}"
+  end
+
+  def self.buscar_con_bounding_box(bbox)
     params = {
       q: 'farmacia',
       format: 'json',
-      lat: latitud,
-      lon: longitud,
-      limit: 20,
+      bounded: 1,
+      viewbox: bbox,
+      limit: 50,
       countrycodes: 'cl',
       addressdetails: 1
     }
+    hacer_peticion(params)
+  end
 
+  def self.buscar_con_radio_directo(lat, lon, radio_km)
+    params = {
+      q: 'farmacia',
+      format: 'json',
+      lat: lat,
+      lon: lon, 
+      radius: radio_km * 1000,
+      limit: 50,
+      countrycodes: 'cl'
+    }
+    hacer_peticion(params)
+  end
+
+  def self.hacer_peticion(params)
     begin
       uri = URI(BASE_URL)
       uri.query = URI.encode_www_form(params)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-
+      http.read_timeout = 30
       request = Net::HTTP::Get.new(uri)
-      request['User-Agent'] = 'CSSClinicMedicalApp/1.0'
+      request['User-Agent'] = 'MedicalApp/1.0 (contacto@ejemplo.com)'
       request['Accept'] = 'application/json'
 
       sleep(1)
       response = http.request(request)
-
       if response.code == '200'
-        resultados = JSON.parse(response.body)
-        resultados_filtrados = filtrar_por_distancia(resultados, latitud, longitud, radio_km)
-        parsear_resultados_solo_nombres_comerciales(resultados_filtrados)
+        datos = JSON.parse(response.body)
+        datos
+      else
+        puts "Error HTTP: #{response.code}"
+        []
       end
+    rescue => e
+      puts "Error en petición: #{e.message}"
+      []
     end
   end
 
-  def self.filtrar_por_distancia(resultados, lat_central, lng_central, radio_km)
+  def self.filtrar_por_distancia_real(resultados, lat_central, lng_central, radio_km)
     resultados.select do |resultado|
+      next false unless resultado['lat'] && resultado['lon']
       lat_resultado = resultado['lat'].to_f
       lng_resultado = resultado['lon'].to_f
-
       distancia = calcular_distancia_km(lat_central, lng_central, lat_resultado, lng_resultado)
+      nombre = resultado['name'] || 'Sin nombre'
+      
       distancia <= radio_km
+    end.sort_by do |resultado|
+      calcular_distancia_km(lat_central, lng_central, resultado['lat'].to_f, resultado['lon'].to_f)
     end
   end
 
   def self.calcular_distancia_km(lat1, lon1, lat2, lon2)
-    # Fórmula calcular distancia en kilómetros
     rad_per_deg = Math::PI / 180
-    rkm = 6371 # Radio de la tierra
+    rkm = 6371
 
     dlat_rad = (lat2 - lat1) * rad_per_deg
     dlon_rad = (lon2 - lon1) * rad_per_deg
@@ -74,35 +109,36 @@ class NominatimService
     (rkm * c).round(2)
   end
 
-  def self.parsear_resultados_solo_nombres_comerciales(resultados)
+  def self.parsear_resultados(resultados)
     resultados.map do |resultado|
-      direccion = resultado['display_name'].to_s.downcase
-      nombre_original = resultado['name'].to_s
-      nombre_comercial = detectar_solo_nombre_comercial(direccion, nombre_original)
+      nombre = mejorar_nombre_farmacia(resultado['name'], resultado['display_name'])
+      direccion = resultado['display_name'] || 'Dirección no disponible'
+      
       {
-        'nombre' => nombre_comercial,
-        'direccion' => resultado['display_name'].to_s,
+        'nombre' => nombre,
+        'direccion' => direccion,
         'latitud' => resultado['lat'].to_f,
         'longitud' => resultado['lon'].to_f
       }
     end.first(6)
   end
 
-  def self.detectar_solo_nombre_comercial(direccion, nombre_original)
-    direccion_down = direccion.downcase
+  def self.mejorar_nombre_farmacia(nombre_original, direccion_completa)
+    return 'Farmacia' if nombre_original.blank?
     nombre_down = nombre_original.downcase
-    if direccion_down.include?('ahumada') || nombre_down.include?('ahumada')
-      'Farmacia Ahumada'
-    elsif direccion_down.include?('cruz verde') || nombre_down.include?('cruz verde')
+    direccion_down = direccion_completa.downcase
+    if nombre_down.include?('cruz verde') || direccion_down.include?('cruz verde')
       'Farmacia Cruz Verde'
-    elsif direccion_down.include?('salcobrand') || nombre_down.include?('salcobrand')
+    elsif nombre_down.include?('ahumada') || direccion_down.include?('ahumada')
+      'Farmacia Ahumada'
+    elsif nombre_down.include?('salcobrand') || direccion_down.include?('salcobrand')
       'Farmacia Salcobrand'
-    elsif direccion_down.include?('dr. simi') || direccion_down.include?('dr simi') || nombre_down.include?('simi')
+    elsif nombre_down.include?('simi') || direccion_down.include?('simi')
       'Farmacia Dr. Simi'
-    elsif direccion_down.include?('farmacia') && nombre_original.present?
+    elsif nombre_down.include?('farmacia')
       nombre_original
     else
-      nombre_original.present? ? nombre_original : 'Farmacia'
+      "Farmacia #{nombre_original}"
     end
   end
 end
