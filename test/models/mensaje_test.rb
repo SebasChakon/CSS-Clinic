@@ -30,6 +30,7 @@ class MensajeTest < ActiveSupport::TestCase
       paciente: @paciente,
       doctor: @doctor,
       fecha_hora: 1.day.from_now,
+      duracion: 12,
       motivo: 'Consulta médica',
       ubicacion: 'Clínica Central'
     )

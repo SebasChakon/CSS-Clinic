@@ -278,4 +278,114 @@ class ReservasControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
+
+  test 'doctor no puede acceder al formulario de nueva reserva' do
+    sign_in @doctor
+    get new_reserva_url(doctor_id: @doctor.id)
+    assert_redirected_to reservas_path
+    assert_equal 'Solo los pacientes pueden agendar citas', flash[:alert]
+  end
+
+  test 'paciente puede crear una nueva reserva válida' do
+    sign_in @paciente
+    assert_difference('Reserva.count', 1) do
+      post reservas_url, params: {
+        reserva: {
+          doctor_id: @doctor.id,
+          fecha_hora: 2.days.from_now,
+          motivo: 'Chequeo de rutina',
+          ubicacion: 'Consultorio C',
+          duracion: 30
+        }
+      }
+    end
+    assert_redirected_to reserva_path(Reserva.last)
+    assert_equal 'Cita agendada exitosamente. Espera la confirmación del médico.', flash[:notice]
+  end
+
+  test 'doctor no puede crear reservas' do
+    sign_in @doctor
+    assert_no_difference('Reserva.count') do
+      post reservas_url, params: {
+        reserva: {
+          doctor_id: @doctor.id,
+          fecha_hora: 2.days.from_now,
+          motivo: 'Intento inválido'
+        }
+      }
+    end
+    assert_redirected_to reservas_path
+    assert_equal 'Solo los pacientes pueden agendar citas', flash[:alert]
+  end
+
+  test 'paciente puede cancelar una reserva suya' do
+    sign_in @paciente
+    reserva = Reserva.create!(
+      paciente: @paciente,
+      doctor: @doctor,
+      fecha_hora: 4.days.from_now,
+      motivo: 'Cancelar consulta',
+      ubicacion: 'Consultorio F',
+      duracion: 30,
+      estado: :pendiente
+    )
+
+    get cancelar_reserva_url(reserva)
+    assert_redirected_to reserva_path(reserva)
+    reserva.reload
+    assert_equal 'cancelada', reserva.estado
+  end
+
+  test 'usuario no autenticado es redirigido al intentar acceder a reservas' do
+    get reservas_url
+    assert_redirected_to new_user_session_path
+  end
+
+  test 'paciente no puede editar reserva' do
+    sign_in @paciente
+    get edit_reserva_url(@reserva_confirmada)
+
+    assert_redirected_to reservas_path
+    assert_equal 'No tienes permisos para editar esta reserva', flash[:alert]
+  end
+
+  test 'admin puede ver listado de reservas' do
+    sign_in @admin
+    get reservas_url
+
+    assert_response :success
+  end
+
+  test 'paciente no puede marcar reserva como completada' do
+    sign_in @paciente
+    get completar_reserva_url(@reserva_confirmada)
+
+    assert_redirected_to reservas_path
+    assert_equal 'Solo los médicos pueden marcar reservas como completadas', flash[:alert]
+  end
+
+  test 'doctor no puede acceder al formulario de nueva reserva aunque pase doctor_id' do
+    sign_in @doctor
+    get new_reserva_url(doctor_id: @doctor.id)
+
+    assert_redirected_to reservas_path
+    assert_equal 'Solo los pacientes pueden agendar citas', flash[:alert]
+  end
+
+  test 'admin no puede crear reservas' do
+    sign_in @admin
+
+    assert_no_difference 'Reserva.count' do
+      post reservas_url, params: {
+        reserva: {
+          doctor_id: @doctor.id,
+          fecha_hora: 3.days.from_now,
+          motivo: 'Intento inválido admin'
+        }
+      }
+    end
+
+    assert_redirected_to reservas_path
+    assert_equal 'Solo los pacientes pueden agendar citas', flash[:alert]
+  end
 end
