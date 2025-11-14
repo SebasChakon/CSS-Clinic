@@ -329,7 +329,7 @@ class HorariosControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to horarios_url
   end
-  
+
   test 'doctor no puede actualizar horario de otro doctor' do
     sign_in @doctor
     patch horario_url(@horario_otro_doctor), params: {
