@@ -271,7 +271,7 @@ class HorariosControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to horarios_url
   end
-  
+
   test 'eliminación de horario es permanente' do
     sign_in @doctor
     horario_id = @horario_futuro.id
@@ -316,7 +316,7 @@ class HorariosControllerTest < ActionDispatch::IntegrationTest
         ubicacion: 'Consultorio Mañana'
       }
     }
-    
+
     assert_difference('HorarioAtencion.count', 1) do
       post horarios_url, params: {
         horario_atencion: {
@@ -329,7 +329,7 @@ class HorariosControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to horarios_url
   end
-  
+
   test 'doctor no puede actualizar horario de otro doctor' do
     sign_in @doctor
     patch horario_url(@horario_otro_doctor), params: {

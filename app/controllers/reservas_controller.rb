@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReservasController < ApplicationController
   before_action :authenticate_user!
   before_action :set_reserva, only: %i[show edit update cancelar confirmar completar]
@@ -37,7 +39,7 @@ class ReservasController < ApplicationController
                                   .where(estado: %i[pendiente confirmada])
                                   .order(fecha_hora: :asc)
                                   .first
-      
+
     elsif current_user.doctor?
       @reservas = current_user.reservas_doctor.includes(:paciente, resenas: :autor).order(fecha_hora: :desc)
 
@@ -181,12 +183,12 @@ class ReservasController < ApplicationController
       redirect_to root_path, alert: "No se pudieron obtener las coordenadas. Usa 'Ubicación real' primero."
       return
     end
-    
+
     @farmacias = NominatimService.buscar_farmacias(latitud, longitud)
     session[:ultimas_farmacias] = @farmacias
-    session[:ultima_ubicacion] = { 
-      lat: latitud.to_f, 
-      lng: longitud.to_f 
+    session[:ultima_ubicacion] = {
+      lat: latitud.to_f,
+      lng: longitud.to_f
     }
     redirect_to root_path, notice: "Encontradas #{@farmacias.count} farmacias cerca de ti"
   end

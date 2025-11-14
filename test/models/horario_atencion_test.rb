@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HorarioAtencionTest < ActiveSupport::TestCase
   test 'nombre_dia retorna Domingo para domingo' do
     horario = HorarioAtencion.new(fecha: Date.new(2025, 11, 16))
