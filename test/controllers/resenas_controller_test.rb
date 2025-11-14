@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ResenasControllerTest < ActionDispatch::IntegrationTest
   def setup
     uid = SecureRandom.hex(4)

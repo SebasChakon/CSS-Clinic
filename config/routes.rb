@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     collection do
       get 'farmacias_cercanas'
     end
-    
+
     member do
       get :cancelar
       get :confirmar

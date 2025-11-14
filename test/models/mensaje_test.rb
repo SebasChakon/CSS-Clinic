@@ -9,7 +9,7 @@ class MensajeTest < ActiveSupport::TestCase
     @paciente = User.create!(
       firstname: 'Laura',
       lastname: 'Fernández',
-      username: 'ANITA123',
+      username: "paciente#{id}",
       email: "laura#{id}@example.com",
       password: 'password',
       rol: :paciente,
@@ -19,7 +19,7 @@ class MensajeTest < ActiveSupport::TestCase
     @doctor = User.create!(
       firstname: 'Miguel',
       lastname: 'Soto',
-      username: 'ANITA123',
+      username: "doctor#{id}",
       email: "miguel#{id}@example.com",
       password: 'password',
       rol: :doctor,
@@ -42,8 +42,58 @@ class MensajeTest < ActiveSupport::TestCase
     )
   end
 
-  test 'mensaje con contenido muy largo sigue siendo válido' do
-    @mensaje.contenido = 'A' * 5000
+  test 'mensaje es válido con atributos correctos' do
+    assert @mensaje.valid?
+  end
+
+  test 'mensaje no es válido sin contenido' do
+    @mensaje.contenido = nil
+    assert_not @mensaje.valid?
+  end
+
+  test 'mensaje no es válido si contenido está vacío' do
+    @mensaje.contenido = ''
+    assert_not @mensaje.valid?
+  end
+
+  test 'mensaje debe pertenecer a una reserva' do
+    @mensaje.reserva = nil
+    assert_not @mensaje.valid?
+  end
+
+  test 'mensaje debe tener un usuario' do
+    @mensaje.user = nil
+    assert_not @mensaje.valid?
+  end
+
+  test 'mensaje de largo extremo sigue siendo válido' do
+    @mensaje.contenido = 'A' * 10_000
     assert_predicate @mensaje, :valid?
+  end
+
+  test 'se pueden crear múltiples mensajes en la misma reserva' do
+    mensaje2 = Mensaje.new(
+      reserva: @reserva,
+      user: @doctor,
+      contenido: 'Hola, ¿qué necesitas?'
+    )
+
+    assert mensaje2.valid?
+  end
+
+  test 'mensajes se ordenan por fecha de creación (si existe scope)' do
+    m1 = Mensaje.create!(
+      reserva: @reserva,
+      user: @paciente,
+      contenido: '1'
+    )
+    sleep(0.01)
+    m2 = Mensaje.create!(
+      reserva: @reserva,
+      user: @doctor,
+      contenido: '2'
+    )
+
+    assert_equal [m1, m2], Mensaje.order(:created_at).to_a
   end
 end
