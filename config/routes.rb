@@ -8,6 +8,10 @@ Rails.application.routes.draw do
 
   # Rutas de reservas
   resources :reservas, only: %i[index show edit update new create] do
+    collection do
+      get 'farmacias_cercanas'
+    end
+    
     member do
       get :cancelar
       get :confirmar

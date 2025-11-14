@@ -76,6 +76,8 @@ gem 'cloudinary'
 
 gem 'activestorage-cloudinary-service'
 
+gem 'httparty'
+
 group :development, :test do
   gem 'dotenv-rails'
 end
