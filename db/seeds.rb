@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+#BORRAR DATOS ACTUALES
 Resena.destroy_all
 Mensaje.destroy_all
 Reserva.destroy_all
 HorarioAtencion.destroy_all
 User.destroy_all
 
+#CREAR ADMIN
 admin = User.create!(
   email: 'admin@clinica.com',
   firstname: 'Administrador',
@@ -17,6 +19,7 @@ admin = User.create!(
   password_confirmation: '123456'
 )
 
+#CREAR DOCTORES
 doctores = []
 
 doctores << User.create!(
@@ -74,6 +77,7 @@ doctores << User.create!(
   password_confirmation: '123456'
 )
 
+#CREAR PACIENTES
 pacientes = []
 
 pacientes << User.create!(
@@ -142,12 +146,14 @@ pacientes << User.create!(
   password_confirmation: '123456'
 )
 
+#CREAR HORARIOS
 horarios = []
 
 doctores.each do |doctor|
   (0..9).each do |dia|
     fecha = Date.today + dia.days
 
+    #HORARIOS 
     horarios << HorarioAtencion.create!(
       doctor: doctor,
       fecha: fecha,
@@ -157,6 +163,7 @@ doctores.each do |doctor|
       disponible: dia > 2 
     )
 
+    #EN LA TARDE SOLO LUNES MIERCOLES Y VIERNES
     if [1, 3, 5].include?(fecha.wday)
       horarios << HorarioAtencion.create!(
         doctor: doctor,
@@ -170,6 +177,7 @@ doctores.each do |doctor|
   end
 end
 
+#CREAR RESERVAS
 reservas = []
 
 reservas << Reserva.create!(
@@ -252,6 +260,7 @@ reservas << Reserva.create!(
   estado: 'cancelada'
 )
 
+#CREAR MENSAJES
 mensajes = []
 
 mensajes << Mensaje.create!(
@@ -302,6 +311,7 @@ mensajes << Mensaje.create!(
   contenido: 'Solicito atención urgente por favor.'
 )
 
+#CREAR RESEÑAS
 resenas = []
 
 resenas << Resena.create!(
