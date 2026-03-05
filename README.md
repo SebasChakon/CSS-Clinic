@@ -1,84 +1,118 @@
-# Servicios Médicos CSS - Grupo 60
+#  CSS Clinic
 
-**URL de la aplicación en Render:** https://rendeerr.onrender.com/
+A full-featured web-based medical management system that connects patients with doctors, enabling seamless appointment scheduling, real-time communication, and comprehensive practice administration.
 
-## Descripción del Proyecto
-Sistema web completo para gestión de reservas médicas que conecta pacientes con doctores, permitiendo agendar, gestionar y realizar seguimiento de citas médicas.
+ **Live Demo:** [https://rendeerr.onrender.com](https://rendeerr.onrender.com)
 
-## Funcionalidades Implementadas
+>  **Status:** Project complete.
 
-### Autenticación y Usuarios
-- **Sistema de registro y login** con Devise
-- **Roles de usuario**: Paciente y Doctor
-- **Panel de administración** para gestión de usuarios
+---
 
-### Gestión Completa de Reservas
-- **Crear nuevas reservas**
-- **Ver listado de reservas con filtros por estado**
-- **Editar y actualizar reservas existentes**
-- **Sistema de estados**: Pendiente → Confirmada → Completada/Cancelada
-- **Acciones específicas**:
-  - Cancelar reserva
-  - Confirmar reserva (doctores)
-  - Completar reserva (doctores)
+##  Features
 
-### API de Farmacias Cercanas
-- **Búsqueda de farmacias** por geolocalización
-- **Integración API externa**
-- **Interfaz responsive** actualizaciones en tiempo real
+###  Authentication & User Management
+- User registration and login powered by **Devise**
+- Two user roles: **Patient** and **Doctor**
+- Admin panel for full user management and role assignment
 
-### Sistema de Mensajería en Tiempo Real
-- **Chat integrado** entre paciente y doctor
-- **Creación de mensajes** en cada reserva
-- **Historial de conversaciones**
+###  Appointment Booking
+- Create, edit, and cancel medical appointments
+- Filter appointment list by status
+- Status workflow: `Pending → Confirmed → Completed / Cancelled`
+- Role-specific actions:
+  - Patients can cancel their appointments
+  - Doctors can confirm and mark appointments as completed
 
-### Sistema de Reseñas
-- **Crear reseñas** para reservas completadas
-- **Editar y actualizar reseñas existentes**
-- **Eliminar reseñas propias**
+###  Real-Time Messaging
+- Integrated chat between patient and doctor within each appointment
+- Full conversation history per booking
 
-### Gestión de Horarios Médicos
-- **Crear horarios**
-- **Gestionar disponibilidad propia**
-- **Editar y eliminar horarios existentes**
+###  Review System
+- Patients can submit reviews for completed appointments
+- Edit and delete your own reviews
 
-### Panel de Administración
-- **Panel de gestión**
-- **Convertir usuarios a doctores**
-- **Gestión de doctores**
-- **Administración de reservas**
+###  Doctor Schedule Management
+- Doctors can create and manage their own availability
+- Edit or remove existing time slots
 
-# Pasos de Instalación
+###  Nearby Pharmacy Finder
+- Geolocation-based pharmacy search
+- Integration with an external pharmacy API
+- Responsive interface with real-time updates
 
-### Clonar el repositorio
-git clone https://github.com/IIC2143/2025-2-grupo-60.git
+###  Admin Panel
+- Full management dashboard
+- Promote users to Doctor role
+- Oversee appointments and doctors across the platform
 
-### Moverse a la carpeta
-cd 2025-2-grupo-60
+---
 
-### Instalar dependencias de Ruby
-bundle install
+##  Tech Stack
 
-### Instalar dependencias de JavaScript
-yarn install
+| Layer         | Technology                        |
+|---------------|-----------------------------------|
+| Frontend      | Tailwind CSS                      |
+| Backend       | Ruby on Rails                     |
+| Database      | PostgreSQL (via Rails)            |
+| Auth          | Devise                            |
+| Deployment    | Render                            |
 
-### Configurar base de datos
-rails db:create
+---
 
-rails db:migrate
+##  Installation & Setup
 
-rails db:seed
+### Prerequisites
 
-### Ejecutar el servidor
-rails server
+- Ruby & Bundler
+- Node.js & Yarn
+- PostgreSQL
 
-### Datos para ingresar y hacer testing:
+### Steps
 
-Medico: "Email: doctor@clinica.com
-        Contraseña: 123456"
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/IIC2143/CSS.Clinic.git
+   cd 2025-2-grupo-60
+   ```
 
-Paciente: "Email: paciente@clinica.com
-        Contraseña: 123456"
+2. **Install Ruby dependencies:**
+   ```bash
+   bundle install
+   ```
 
-Administrador: "Email: admin@clinica.com
-                Contraseña: 123456"
+3. **Install JavaScript dependencies:**
+   ```bash
+   yarn install
+   ```
+
+4. **Set up the database:**
+   ```bash
+   rails db:create
+   rails db:migrate
+   rails db:seed
+   ```
+
+5. **Start the server:**
+   ```bash
+   rails server
+   ```
+
+6. Open your browser and navigate to `http://localhost:3000`.
+
+---
+
+##  Test Credentials
+
+Use the following accounts to explore the platform:
+
+| Role          | Email                    | Password |
+|---------------|--------------------------|----------|
+|  Doctor   | doctor@clinica.com       | 123456   |
+|  Patient    | paciente@clinica.com     | 123456   |
+|  Admin      | admin@clinica.com        | 123456   |
+
+---
+
+##  License
+
+MIT — free to use, modify, and distribute.
