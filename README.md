@@ -72,7 +72,7 @@ A full-featured web-based medical management system that connects patients with 
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/SebasChakon/CSS-Clinic.git
-   cd 2025-2-grupo-60
+   cd CSS-Clinic
    ```
 
 2. **Install Ruby dependencies:**
